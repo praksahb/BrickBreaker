@@ -22,5 +22,15 @@ namespace BallBreaker.Ball
             BallModel ballModel = new BallModel(speed);
             return new BallController(ballModel, ballPrefab);
         }
+
+        public BallController GetBall()
+        {
+            return ballPool.GetObject();
+        }
+
+        public void ReturnBall(BallController ball)
+        {
+            ballPool.ReturnObject(ball);
+        }
     }
 }
