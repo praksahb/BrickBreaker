@@ -11,20 +11,27 @@ namespace BallBreaker
         [SerializeField] private int ballSpeed;
         [SerializeField] private int poolSize;
 
+        private BoundaryManager boundaryManager;
         private BallServicePool ballServicePool;
+
+        private void Awake()
+        {
+            boundaryManager = GetComponent<BoundaryManager>();
+        }
 
         private void Start()
         {
             ballServicePool = new BallServicePool(poolSize, ballSpeed, ballPrefab);
+            boundaryManager.SetBoundaries();
         }
 
         private List<BallController> ballList;
 
         private void FixedUpdate()
         {
-            AddBalls();
+            //AddBalls();
 
-            RemoveBalls();
+            //RemoveBalls();
         }
 
         public void AddBalls()
