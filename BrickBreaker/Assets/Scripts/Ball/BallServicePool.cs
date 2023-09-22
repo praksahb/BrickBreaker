@@ -1,26 +1,27 @@
 using BrickBreaker.Ball;
+using UnityEngine;
 
 namespace BallBreaker.Ball
 {
     public class BallServicePool
     {
-        public int amount, speed;
+        private int speed;
         private GenericPooling<BallController> ballPool;
-
+        private Transform parent;
         private BallView ballPrefab;
 
-        public BallServicePool(int amount, int speed, BallView ballPrefab)
+        public BallServicePool(int amount, int speed, BallView ballPrefab, Transform parentObj)
         {
-            this.amount = amount;
             this.ballPrefab = ballPrefab;
             this.speed = speed;
+            parent = parentObj;
             ballPool = new GenericPooling<BallController>(amount, CreateBall);
         }
 
         public BallController CreateBall()
         {
             BallModel ballModel = new BallModel(speed);
-            return new BallController(ballModel, ballPrefab);
+            return new BallController(ballModel, ballPrefab, parent);
         }
 
         public BallController GetBall()

@@ -7,10 +7,12 @@ namespace BrickBreaker.Ball
         public BallModel BallModel { get; }
         public BallView BallView { get; }
 
-        public BallController(BallModel ballModel, BallView ballView)
+        public BallController(BallModel ballModel, BallView ballView, Transform parent)
         {
             BallModel = ballModel;
-            BallView = Object.Instantiate(ballView);
+            BallView = Object.Instantiate(ballView, parent, true);
+            BallView.BallController = this;
+            BallView.SetBallActive(false);
         }
     }
 }

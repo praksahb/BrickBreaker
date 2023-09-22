@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5048671884244206715}
   - component: {fileID: 5048671884245538235}
   - component: {fileID: -2775649247503592894}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Ball
   m_TagString: Ball
   m_Icon: {fileID: 0}
@@ -96,7 +96,7 @@ CircleCollider2D:
   m_GameObject: {fileID: 5048671884241708439}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 74c4cbba51a127f42a4f5139dfb9402b, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
