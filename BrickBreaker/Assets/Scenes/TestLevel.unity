@@ -558,6 +558,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Ball
       objectReference: {fileID: 0}
+    - target: {fileID: 5048671884241708439, guid: 98a1c9097b3bd9644acd89aeb8f15ce9, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 5048671884241989065, guid: 98a1c9097b3bd9644acd89aeb8f15ce9, type: 3}
       propertyPath: m_RootOrder
       value: 4
