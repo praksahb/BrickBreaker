@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace BrickBreaker.Ball
@@ -7,10 +8,15 @@ namespace BrickBreaker.Ball
         public BallModel BallModel { get; }
         public BallView BallView { get; }
 
-        public BallController(BallModel ballModel, BallView ballView)
+        public Action<BallController> ReturnBall;
+
+        public BallController(BallModel ballModel, BallView ballView, Transform parent, Transform firePoint)
         {
             BallModel = ballModel;
-            BallView = Object.Instantiate(ballView);
+            BallView = UnityEngine.Object.Instantiate(ballView, parent, true);
+            BallView.BallController = this;
+            BallView.ResetBall(firePoint);
+            BallView.SetBallActive(false);
         }
     }
 }

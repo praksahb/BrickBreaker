@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace BallBreaker
+namespace BrickBreaker
 {
     public class GenericPooling<T> where T : class
     {

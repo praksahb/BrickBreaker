@@ -1,35 +1,43 @@
-using BrickBreaker.Ball;
+using UnityEngine;
 
-namespace BallBreaker.Ball
+namespace BrickBreaker.Ball
 {
     public class BallServicePool
     {
-        public int amount, speed;
+        private int speed;
         private GenericPooling<BallController> ballPool;
-
+        private Transform parent;
+        private Transform firePoint;
         private BallView ballPrefab;
 
-        public BallServicePool(int amount, int speed, BallView ballPrefab)
+        public BallServicePool(int amount, int speed, BallView ballPrefab, Transform parentObj, Transform firePoint)
         {
-            this.amount = amount;
             this.ballPrefab = ballPrefab;
             this.speed = speed;
+            parent = parentObj;
+            this.firePoint = firePoint;
             ballPool = new GenericPooling<BallController>(amount, CreateBall);
         }
+
+        //factory func delegate
 
         public BallController CreateBall()
         {
             BallModel ballModel = new BallModel(speed);
-            return new BallController(ballModel, ballPrefab);
+            return new BallController(ballModel, ballPrefab, parent, firePoint);
         }
 
         public BallController GetBall()
         {
-            return ballPool.GetObject();
+            BallController ball = ballPool.GetObject();
+            ball.BallView.SetBallActive(true);
+            return ball;
         }
 
-        public void ReturnBall(BallController ball)
+        public void ReturnBall(BallController ball, Transform firePoint)
         {
+            ball.BallView.SetBallActive(false);
+            ball.BallView.ResetBall(firePoint);
             ballPool.ReturnObject(ball);
         }
     }

@@ -1,47 +1,65 @@
-﻿using BallBreaker.Ball;
-using BrickBreaker.Ball;
-using System.Collections.Generic;
+﻿using BrickBreaker.Ball;
+using System.Collections;
 using UnityEngine;
 
-namespace BallBreaker
+namespace BrickBreaker
 {
     public class GameManager : MonoBehaviour
     {
         [SerializeField] private BallView ballPrefab;
         [SerializeField] private int ballSpeed;
         [SerializeField] private int poolSize;
+        [SerializeField] private Transform poolBox;
+        [SerializeField] private Transform firePoint;
 
+        private BoundaryManager boundaryManager;
         private BallServicePool ballServicePool;
+
+        private Coroutine StartGameCoroutine;
+
+        private void Awake()
+        {
+            boundaryManager = GetComponent<BoundaryManager>();
+            SetFirePoint();
+        }
+
+        private void SetFirePoint()
+        {
+            Vector3 point = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width / 2, 0, 0));
+            // manually modifying launch point;
+            point.y += 0.15f; point.z = 0;
+            firePoint.transform.position = point;
+        }
 
         private void Start()
         {
-            ballServicePool = new BallServicePool(poolSize, ballSpeed, ballPrefab);
+            ballServicePool = new BallServicePool(poolSize, ballSpeed, ballPrefab, poolBox, firePoint.transform);
+            boundaryManager.SetBoundaries();
         }
 
-        private List<BallController> ballList;
-
-        private void FixedUpdate()
+        public void StartGame(Vector3 direction)
         {
-            AddBalls();
-
-            RemoveBalls();
+            StartCoroutine(LaunchBalls(direction));
         }
 
-        public void AddBalls()
+        private IEnumerator LaunchBalls(Vector3 dir)
         {
             for (int i = 0; i < poolSize; i++)
             {
-                ballList.Add(ballServicePool.GetBall());
+                BallController ball = ballServicePool.GetBall();
+                if (ball != null)
+                {
+                    ball.BallView.SetLaunchBall(dir);
+                    ball.ReturnBall += ReturnBall;
+                    yield return new WaitForSecondsRealtime(0.05f);
+                }
             }
         }
 
-        private void RemoveBalls()
+        private void ReturnBall(BallController ball)
         {
-            for (int i = 0; i < ballList.Count; i++)
-            {
-                BallController ball = ballList[i];
-                ballServicePool.ReturnBall(ball);
-            }
+            ball.ReturnBall -= ReturnBall;
+            ballServicePool.ReturnBall(ball, firePoint.transform);
         }
     }
 }
