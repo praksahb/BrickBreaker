@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace BallBreaker
+namespace BrickBreaker
 {
     public class BoundaryManager : MonoBehaviour
     {

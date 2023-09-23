@@ -21,14 +21,27 @@ namespace BrickBreaker.Ball
 
         public void SetLaunchBall(Transform FirePoint)
         {
+            // Can now be used to launch in direction of input direction,
+
+            Vector3 velocity = BallController.BallModel.BallSpeed * transform.up;
+            SetVelocity(velocity);
+        }
+
+        public void ResetBall(Transform FirePoint)
+        {
             transform.SetPositionAndRotation(FirePoint.position, FirePoint.rotation);
-            Vector3 speed = BallController.BallModel.BallSpeed * transform.up;
-            Rigidbody2D.velocity = speed;
+
+            if (Rigidbody2D) SetVelocity(Vector3.zero);
+        }
+
+        private void SetVelocity(Vector3 velocity)
+        {
+            Rigidbody2D.velocity = velocity;
         }
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
-            // handle interaction for when the ball will collide with another collider, like bricks or the wall.
+            // handle interaction for when the ball will collide with another collider, like bricks or the wall. using Vector reflect
             //alternatively handle collision logic in Bricks monobehaviour which might lead to lesser operations overall
             Debug.Log("Collision detected.");
         }
@@ -36,6 +49,9 @@ namespace BrickBreaker.Ball
         private void OnTriggerEnter2D(Collider2D collision)
         {
             Debug.Log("Tic");
+
+            // raise event in game manager to return the ball
+            BallController.ReturnBall?.Invoke(BallController);
         }
     }
 }
