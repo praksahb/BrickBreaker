@@ -19,11 +19,10 @@ namespace BrickBreaker.Ball
             gameObject.SetActive(val);
         }
 
-        public void SetLaunchBall(Transform FirePoint)
+        public void SetLaunchBall(Vector3 dir)
         {
-            // Can now be used to launch in direction of input direction,
 
-            Vector3 velocity = BallController.BallModel.BallSpeed * transform.up;
+            Vector3 velocity = BallController.BallModel.BallSpeed * dir;
             SetVelocity(velocity);
         }
 
