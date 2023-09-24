@@ -6,11 +6,20 @@ namespace BrickBreaker
 {
     public class GameManager : MonoBehaviour
     {
+        [SerializeField] private Camera mainCamera;
         [SerializeField] private BallView ballPrefab;
         [SerializeField] private int ballSpeed;
         [SerializeField] private int poolSize;
         [SerializeField] private Transform poolBox;
         [SerializeField] private Transform firePoint;
+
+        public Camera MainCamera
+        {
+            get
+            {
+                return mainCamera;
+            }
+        }
 
         private BoundaryManager boundaryManager;
         private BallServicePool ballServicePool;
@@ -20,21 +29,25 @@ namespace BrickBreaker
         private void Awake()
         {
             boundaryManager = GetComponent<BoundaryManager>();
-            SetFirePoint();
-        }
-
-        private void SetFirePoint()
-        {
-            Vector3 point = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width / 2, 0, 0));
-            // manually modifying launch point;
-            point.y += 0.15f; point.z = 0;
-            firePoint.transform.position = point;
+            if (boundaryManager)
+            {
+                boundaryManager.MainCamera = mainCamera;
+            }
         }
 
         private void Start()
         {
             ballServicePool = new BallServicePool(poolSize, ballSpeed, ballPrefab, poolBox, firePoint.transform);
+            SetFirePoint();
             boundaryManager.SetBoundaries();
+        }
+
+        private void SetFirePoint()
+        {
+            Vector3 point = mainCamera.ScreenToWorldPoint(new Vector3(Screen.width / 2, 0, 0));
+            // manually modifying launch point;
+            point.y += 0.15f; point.z = 0;
+            firePoint.transform.position = point;
         }
 
         public void StartGame(Vector3 direction)
