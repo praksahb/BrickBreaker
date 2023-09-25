@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6272026364835344251}
   - component: {fileID: 6272026364835344253}
   - component: {fileID: 6272026364835344252}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: HorizontalBarrier
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -122,7 +122,7 @@ GameObject:
   - component: {fileID: 6272026366501077957}
   - component: {fileID: 6272026366501077959}
   - component: {fileID: 6272026366501077958}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: VerticalBarrier
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -231,7 +231,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6272026366600215369}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: TopRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -11,6 +11,8 @@ namespace BrickBreaker
         private Transform bottomLeftBoundary;
 
 
+        public Camera MainCamera { get; set; }
+
         private void Awake()
         {
             topRightBoundary = Instantiate(topRightPrefab);
@@ -19,11 +21,11 @@ namespace BrickBreaker
 
         public void SetBoundaries()
         {
-            Vector3 point = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, Camera.main.nearClipPlane));
+            Vector3 point = MainCamera.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, MainCamera.nearClipPlane));
 
             topRightBoundary.transform.position = point;
 
-            point = Camera.main.ScreenToWorldPoint(new Vector3(0, 0, Camera.main.nearClipPlane));
+            point = MainCamera.ScreenToWorldPoint(new Vector3(0, 0, MainCamera.nearClipPlane));
             bottomLeftBoundary.transform.position = point;
         }
     }
