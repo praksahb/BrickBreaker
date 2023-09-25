@@ -19,15 +19,16 @@ namespace BrickBreaker.Ball
         public void SetBallActive(bool val)
         {
             gameObject.SetActive(val);
+            ResetBall();
         }
 
-        public void SetLaunchBall()
+        public void LaunchBall()
         {
             Vector3 velocity = BallController.BallModel.BallSpeed * FirePoint.transform.up;
             SetVelocity(velocity);
         }
 
-        public void ResetBall()
+        private void ResetBall()
         {
             transform.SetPositionAndRotation(FirePoint.position, FirePoint.rotation);
             if (Rigidbody2D) SetVelocity(Vector3.zero);

@@ -29,6 +29,7 @@ namespace BrickBreaker
         private Coroutine LaunchBallCoroutine;
 
         private bool isAiming;
+        private int count;
 
         private void Awake()
         {
@@ -83,6 +84,7 @@ namespace BrickBreaker
                 StopCoroutine(LaunchBallCoroutine);
             }
             LaunchBallCoroutine = StartCoroutine(LaunchBalls());
+            count = 0;
         }
 
         private IEnumerator LaunchBalls()
@@ -92,7 +94,7 @@ namespace BrickBreaker
                 BallController ball = ballServicePool.GetBall();
                 if (ball != null)
                 {
-                    ball.BallView.SetLaunchBall();
+                    ball.BallView.LaunchBall();
                     ball.ReturnBall += ReturnBall;
                     yield return new WaitForSecondsRealtime(0.05f);
                 }
@@ -103,6 +105,11 @@ namespace BrickBreaker
         {
             ball.ReturnBall -= ReturnBall;
             ballServicePool.ReturnBall(ball, firePoint.transform);
+            count++;
+            if (count == poolSize)
+            {
+                isAiming = true;
+            }
         }
     }
 }

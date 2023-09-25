@@ -16,7 +16,6 @@ namespace BrickBreaker.Ball
             BallView = UnityEngine.Object.Instantiate(ballView, firePoint, true);
             BallView.BallController = this;
             BallView.FirePoint = firePoint;
-            BallView.ResetBall();
             BallView.SetBallActive(false);
         }
     }
