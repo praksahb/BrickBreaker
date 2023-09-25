@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace BrickBreaker
+namespace BrickBreaker.Services.Aiming
 {
     public class AimLineController : MonoBehaviour
     {
