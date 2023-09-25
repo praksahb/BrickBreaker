@@ -1,8 +1,9 @@
 ﻿using BrickBreaker.Ball;
+using BrickBreaker.Services.Aiming;
 using System.Collections;
 using UnityEngine;
 
-namespace BrickBreaker
+namespace BrickBreaker.Services
 {
     public class GameManager : MonoBehaviour
     {
