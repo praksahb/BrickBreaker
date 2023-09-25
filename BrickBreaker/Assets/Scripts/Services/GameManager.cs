@@ -10,8 +10,10 @@ namespace BrickBreaker
         [SerializeField] private BallView ballPrefab;
         [SerializeField] private int ballSpeed;
         [SerializeField] private int poolSize;
-        [SerializeField] private Transform poolBox;
         [SerializeField] private Transform firePoint;
+        [SerializeField] private float AimLineLength;
+        [SerializeField] private int maxReflections;
+        [SerializeField] private float lineOffset;
 
         public Camera MainCamera
         {
@@ -22,24 +24,47 @@ namespace BrickBreaker
         }
 
         private BoundaryManager boundaryManager;
+        private AimLineController aimLineController;
         private BallServicePool ballServicePool;
+        private Coroutine LaunchBallCoroutine;
 
-        private Coroutine StartGameCoroutine;
+        private bool isAiming;
 
         private void Awake()
         {
             boundaryManager = GetComponent<BoundaryManager>();
-            if (boundaryManager)
+            aimLineController = firePoint.GetComponent<AimLineController>();
+            if (boundaryManager && aimLineController)
             {
                 boundaryManager.MainCamera = mainCamera;
+                aimLineController.MainCamera = mainCamera;
             }
         }
 
         private void Start()
         {
-            ballServicePool = new BallServicePool(poolSize, ballSpeed, ballPrefab, poolBox, firePoint.transform);
+            ballServicePool = new BallServicePool(poolSize, ballSpeed, ballPrefab, firePoint.transform);
             SetFirePoint();
             boundaryManager.SetBoundaries();
+            aimLineController.SetLineValues(AimLineLength, maxReflections, lineOffset);
+            isAiming = true;
+        }
+
+        private void Update()
+        {
+            if (isAiming)
+            {
+                aimLineController.LineRenderer.enabled = true;
+                aimLineController.Aim();
+                aimLineController.DrawReflectedTrajectory();
+            }
+
+            if (Input.GetMouseButtonDown(0) && isAiming)
+            {
+                aimLineController.LineRenderer.enabled = false;
+                isAiming = false;
+                LaunchCoroutine();
+            }
         }
 
         private void SetFirePoint()
@@ -50,19 +75,24 @@ namespace BrickBreaker
             firePoint.transform.position = point;
         }
 
-        public void StartGame(Vector3 direction)
+
+        private void LaunchCoroutine()
         {
-            StartCoroutine(LaunchBalls(direction));
+            if (LaunchBallCoroutine != null)
+            {
+                StopCoroutine(LaunchBallCoroutine);
+            }
+            LaunchBallCoroutine = StartCoroutine(LaunchBalls());
         }
 
-        private IEnumerator LaunchBalls(Vector3 dir)
+        private IEnumerator LaunchBalls()
         {
             for (int i = 0; i < poolSize; i++)
             {
                 BallController ball = ballServicePool.GetBall();
                 if (ball != null)
                 {
-                    ball.BallView.SetLaunchBall(dir);
+                    ball.BallView.SetLaunchBall();
                     ball.ReturnBall += ReturnBall;
                     yield return new WaitForSecondsRealtime(0.05f);
                 }

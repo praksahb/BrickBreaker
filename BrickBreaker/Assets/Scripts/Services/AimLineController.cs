@@ -1,117 +1,79 @@
-using BrickBreaker;
 using UnityEngine;
 
 public class AimLineController : MonoBehaviour
 {
-    private LineRenderer lineRenderer;
-    private Vector3 launchDirection;
+    public LineRenderer LineRenderer { get; set; }
 
-    private Vector3 targetPosition;
+    private RaycastHit2D hit;
+    private Vector2 mousePosition;
 
-    private GameManager gameManager;
+    private float totalLength;
+    private int maxReflections;
+    private float lineOffset;
 
-    private int maxReflections = 5;
-    public float minReflectionDirectionMagnitude = 0.1f;
-
-    public float lineSegmentLength = 2f;
-
-    private bool isDrawing = true;
+    public Camera MainCamera { get; set; }
 
     private void Awake()
     {
-        gameManager = GetComponentInParent<GameManager>();
-        lineRenderer = GetComponent<LineRenderer>();
+        LineRenderer = GetComponent<LineRenderer>();
     }
 
-    private void Start()
+    public void SetLineValues(float aimLineLength, int maxReflections, float lineOffset)
     {
-        lineRenderer.positionCount = 1;
-        lineRenderer.enabled = true;
+        totalLength = aimLineLength;
+        this.maxReflections = maxReflections;
+        this.lineOffset = lineOffset;
     }
 
-    private void Update()
+    public void Aim()
     {
-        Aim();
-    }
+        mousePosition = MainCamera.ScreenToWorldPoint(Input.mousePosition);
 
-    private void FixedUpdate()
-    {
-        DrawLine();
-    }
-
-    // Method 1 - Render Launch Direction and launch 
-    private void RenderLine()
-    {
-        Vector3 mousePosition = gameManager.MainCamera.ScreenToWorldPoint(Input.mousePosition);
-
-        launchDirection = (mousePosition - transform.position).normalized;
-        Vector3 secondPoint = new Vector3(transform.position.x + launchDirection.x, 0f, 0f);
-
-        lineRenderer.SetPosition(1, mousePosition);
-
-        if (Input.GetMouseButtonDown(0))
-        {
-            lineRenderer.enabled = false;
-            LaunchBall(launchDirection);
-        }
-    }
-
-    // Method 2 - Using mouse to move transform of firePoint
-    // and launch using the transform.up value
-
-    private void Aim()
-    {
-        targetPosition = gameManager.MainCamera.ScreenToWorldPoint(Input.mousePosition);
-
-        Vector3 difference = targetPosition - transform.position;
+        Vector2 difference = mousePosition - (Vector2)transform.position;
         float angle = Mathf.Atan2(difference.y, difference.x) * Mathf.Rad2Deg;
-
         Quaternion rotation = Quaternion.AngleAxis(angle - 90, Vector3.forward);
-
         transform.rotation = rotation;
     }
 
-    private void DrawLine()
+    public void DrawReflectedTrajectory()
     {
         Vector2 direction = transform.up;
-        Vector2 currentPosition = transform.position;
+        Vector2 origin = (Vector2)transform.position + lineOffset * direction;
 
-        lineRenderer.positionCount = 1; // Reset LineRenderer to one point
+        LineRenderer.positionCount = 1;
+        LineRenderer.SetPosition(0, origin);
 
-        for (int i = 0; i < maxReflections; i++)
+        float currentLength = 0f;
+
+        for (int i = 1; i <= maxReflections; i++)
         {
-            // Cast a ray in the current direction
-            RaycastHit2D hit = Physics2D.Raycast(currentPosition, direction);
+            // create ray in direction from origin
+            hit = Physics2D.Raycast(origin, direction);
 
-            if (hit.collider != null)
+            float length = Vector2.Distance(origin, hit.point);
+
+            currentLength += length;
+
+            if (currentLength > totalLength)
             {
+                float remainingLength = totalLength - (currentLength - length);
 
-                // Hit an object, calculate reflection
-                Vector2 reflection = Vector2.Reflect(direction, hit.normal);
+                // Calculate the final position for the current segment
+                Vector2 finalPosition = origin + direction.normalized * remainingLength;
 
-                // Extend the LineRenderer to the hit point
-                lineRenderer.positionCount++;
-                lineRenderer.SetPosition(lineRenderer.positionCount - 1, hit.point);
-
-                // Update the current position and direction
-                currentPosition = hit.point;
-                direction = reflection;
-            }
-            else
-            {
-                // No collision, exit the loop
+                // Set the final position on the LineRenderer
+                LineRenderer.positionCount++;
+                LineRenderer.SetPosition(i, finalPosition);
                 break;
             }
+
+            // add point/vertice of collision in line renderer
+            LineRenderer.positionCount++;
+            LineRenderer.SetPosition(i, hit.point);
+
+            // reinitialize direction and origin from new point of collision
+            direction = Vector2.Reflect(direction.normalized, hit.normal);
+            origin = hit.point + lineOffset * direction;
         }
-    }
-
-    Vector2 CalculateReflection(Vector2 incomingDirection, Vector2 hitNormal)
-    {
-        return incomingDirection - 2 * Vector2.Dot(incomingDirection, hitNormal) * hitNormal;
-    }
-
-    private void LaunchBall(Vector3 direction)
-    {
-        gameManager.StartGame(direction);
     }
 }
