@@ -32,7 +32,7 @@ namespace BrickBreaker.Ball
             return ball;
         }
 
-        public void ReturnBall(BallController ball, Transform firePoint)
+        public void ReturnBall(BallController ball)
         {
             ball.BallView.SetBallActive(false);
             ballPool.ReturnObject(ball);

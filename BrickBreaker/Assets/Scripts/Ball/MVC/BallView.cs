@@ -9,7 +9,6 @@ namespace BrickBreaker.Ball
 
         public Rigidbody2D Rigidbody2D { get; private set; }
 
-        public Transform FirePoint { get; set; }
 
         private void Awake()
         {
@@ -22,15 +21,15 @@ namespace BrickBreaker.Ball
             ResetBall();
         }
 
-        public void LaunchBall()
+        public void LaunchBall(Vector2 launchPos)
         {
-            Vector3 velocity = BallController.BallModel.BallSpeed * FirePoint.transform.up;
+            Vector3 velocity = BallController.BallModel.BallSpeed * launchPos;
             SetVelocity(velocity);
         }
 
         private void ResetBall()
         {
-            transform.SetPositionAndRotation(FirePoint.position, FirePoint.rotation);
+            transform.localPosition = Vector2.zero;
             if (Rigidbody2D) SetVelocity(Vector3.zero);
         }
 

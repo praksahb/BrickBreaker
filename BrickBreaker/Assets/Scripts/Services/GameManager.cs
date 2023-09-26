@@ -31,6 +31,7 @@ namespace BrickBreaker.Services
 
         private bool isAiming;
         private int count;
+        private Vector2 newFirePosition;
 
         private void Awake()
         {
@@ -65,7 +66,9 @@ namespace BrickBreaker.Services
             {
                 aimLineController.LineRenderer.enabled = false;
                 isAiming = false;
-                LaunchCoroutine();
+                Vector2 launchPosition = firePoint.transform.up;
+
+                LaunchCoroutine(new Vector2(launchPosition.x, launchPosition.y));
             }
         }
 
@@ -78,24 +81,25 @@ namespace BrickBreaker.Services
         }
 
 
-        private void LaunchCoroutine()
+        private void LaunchCoroutine(Vector2 launchPos)
         {
             if (LaunchBallCoroutine != null)
             {
                 StopCoroutine(LaunchBallCoroutine);
             }
-            LaunchBallCoroutine = StartCoroutine(LaunchBalls());
+            LaunchBallCoroutine = StartCoroutine(LaunchBalls(launchPos));
             count = 0;
         }
 
-        private IEnumerator LaunchBalls()
+        private IEnumerator LaunchBalls(Vector2 launchPos)
         {
+
             for (int i = 0; i < poolSize; i++)
             {
                 BallController ball = ballServicePool.GetBall();
                 if (ball != null)
                 {
-                    ball.BallView.LaunchBall();
+                    ball.BallView.LaunchBall(launchPos);
                     ball.ReturnBall += ReturnBall;
                     yield return new WaitForSecondsRealtime(0.05f);
                 }
@@ -105,12 +109,20 @@ namespace BrickBreaker.Services
         private void ReturnBall(BallController ball)
         {
             ball.ReturnBall -= ReturnBall;
-            ballServicePool.ReturnBall(ball, firePoint.transform);
+            if (count == 0)
+            {
+                //update x value of transform.position of firePoint, update firePos after all balls have been launched or after all balls returned
+                newFirePosition = firePoint.transform.position;
+                newFirePosition.x = ball.BallView.transform.position.x;
+            }
+            ballServicePool.ReturnBall(ball);
             count++;
             if (count == poolSize)
             {
+                firePoint.transform.position = newFirePosition;
                 isAiming = true;
             }
+
         }
     }
 }
