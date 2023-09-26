@@ -50,7 +50,6 @@ namespace BrickBreaker.Services
             SetFirePoint();
             boundaryManager.SetBoundaries();
             aimLineController.SetLineValues(AimLineLength, maxReflections, lineOffset);
-            isAiming = true;
         }
 
         private void Update()
@@ -70,6 +69,11 @@ namespace BrickBreaker.Services
 
                 LaunchCoroutine(new Vector2(launchPosition.x, launchPosition.y));
             }
+        }
+
+        public void StartGame()
+        {
+            isAiming = true;
         }
 
         private void SetFirePoint()
@@ -93,7 +97,6 @@ namespace BrickBreaker.Services
 
         private IEnumerator LaunchBalls(Vector2 launchPos)
         {
-
             for (int i = 0; i < poolSize; i++)
             {
                 BallController ball = ballServicePool.GetBall();
