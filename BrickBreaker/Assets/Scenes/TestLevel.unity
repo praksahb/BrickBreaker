@@ -136,7 +136,7 @@ GameObject:
   - component: {fileID: 379307296}
   - component: {fileID: 379307295}
   m_Layer: 5
-  m_Name: Button
+  m_Name: StartButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -477,7 +477,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6746336134f2b1c469d326097e3187f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startGamePanel: {fileID: 1372533112}
+  mainMenuPanel: {fileID: 1372533112}
   gameManager: {fileID: 1476385374}
 --- !u!1 &619394800
 GameObject:
@@ -805,6 +805,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f8505fc2349b404799230790a91f8f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startGame: {fileID: 379307295}
 --- !u!1 &1476385372
 GameObject:
   m_ObjectHideFlags: 0
@@ -853,7 +854,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 519420031}
   ballPrefab: {fileID: -2775649247503592894, guid: 98a1c9097b3bd9644acd89aeb8f15ce9, type: 3}
-  ballSpeed: 10
+  ballSpeed: 20
   poolSize: 100
   firePoint: {fileID: 1646059455}
   AimLineLength: 20
