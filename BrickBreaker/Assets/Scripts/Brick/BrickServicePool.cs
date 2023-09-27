@@ -3,13 +3,11 @@ namespace BrickBreaker.Bricks
     public class BrickServicePool
     {
         private GenericPooling<BrickController> brickPool;
-        private int amount;
         private int brickValue;
         private BrickView brickPrefab;
 
         public BrickServicePool(int amount, BrickView brickPrefab, int brickValue)
         {
-            this.amount = amount;
             this.brickPrefab = brickPrefab;
             this.brickValue = brickValue;
             brickPool = new GenericPooling<BrickController>(amount, CreateBrick);

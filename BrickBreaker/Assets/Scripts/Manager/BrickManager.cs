@@ -13,6 +13,7 @@ namespace BrickBreaker.Bricks
         {
             InitializeBricks();
             BrickController brick = brickPool.GetBrick();
+
         }
 
         private void InitializeBricks()
