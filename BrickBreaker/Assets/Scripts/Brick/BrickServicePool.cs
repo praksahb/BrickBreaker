@@ -22,6 +22,7 @@ namespace BrickBreaker.Bricks
         public BrickController GetBrick()
         {
             BrickController brick = brickPool.GetObject();
+            brick.BrickModel.BrickValue = brickValue;
             brick.BrickView.SetBrickActive(true);
             brick.BrickView.SetBrickValue();
             return brick;
