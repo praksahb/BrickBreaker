@@ -10,7 +10,7 @@ namespace BrickBreaker.Services
         [SerializeField] private Camera mainCamera;
         [SerializeField] private BallView ballPrefab;
         [SerializeField] private int ballSpeed;
-        [SerializeField] private int poolSize;
+        [SerializeField] private int ballPoolSize;
         [SerializeField] private Transform firePoint;
         [SerializeField] private float AimLineLength;
         [SerializeField] private int maxReflections;
@@ -46,7 +46,7 @@ namespace BrickBreaker.Services
 
         private void Start()
         {
-            ballServicePool = new BallServicePool(poolSize, ballSpeed, ballPrefab, firePoint.transform);
+            ballServicePool = new BallServicePool(ballPoolSize, ballSpeed, ballPrefab, firePoint.transform);
             SetFirePoint();
             boundaryManager.SetBoundaries();
             aimLineController.SetLineValues(AimLineLength, maxReflections, lineOffset);
@@ -84,7 +84,6 @@ namespace BrickBreaker.Services
             firePoint.transform.position = point;
         }
 
-
         private void LaunchCoroutine(Vector2 launchPos)
         {
             if (LaunchBallCoroutine != null)
@@ -97,7 +96,7 @@ namespace BrickBreaker.Services
 
         private IEnumerator LaunchBalls(Vector2 launchPos)
         {
-            for (int i = 0; i < poolSize; i++)
+            for (int i = 0; i < ballPoolSize; i++)
             {
                 BallController ball = ballServicePool.GetBall();
                 if (ball != null)
@@ -120,7 +119,7 @@ namespace BrickBreaker.Services
             }
             ballServicePool.ReturnBall(ball);
             count++;
-            if (count == poolSize)
+            if (count == ballPoolSize)
             {
                 firePoint.transform.position = newFirePosition;
                 isAiming = true;

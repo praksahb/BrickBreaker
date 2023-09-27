@@ -9,12 +9,12 @@ namespace BallBreaker
         [SerializeField] private MainMenuPanel mainMenuPanel;
         [SerializeField] private GameManager gameManager;
 
-
         public Action StartGame;
 
         private void Awake()
         {
             mainMenuPanel.UIManager = this;
+            mainMenuPanel.gameObject.SetActive(true);
         }
 
         private void OnEnable()
