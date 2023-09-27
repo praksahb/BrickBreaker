@@ -1,3 +1,4 @@
+using BallBreaker;
 using UnityEngine;
 
 namespace BrickBreaker.Ball
@@ -42,7 +43,12 @@ namespace BrickBreaker.Ball
         {
             // handle interaction for when the ball will collide with another collider, like bricks or the wall. using Vector reflect
             //alternatively handle collision logic in Bricks monobehaviour which might lead to lesser operations overall
-            Debug.Log("Collision detected.");
+
+            if (collision.gameObject.TryGetComponent<IBrickBreak>(out IBrickBreak brick))
+            {
+                Debug.Log("Collision detected.");
+                brick.Break();
+            }
         }
 
         private void OnTriggerEnter2D(Collider2D collision)
