@@ -14,6 +14,7 @@ namespace BrickBreaker.Bricks
             BrickModel = brickModel;
             BrickView = UnityEngine.Object.Instantiate(brickPrefab);
             BrickView.BrickController = this;
+            BrickView.SetBrickDimensions();
             BrickView.SetBrickActive(false);
         }
     }

@@ -19,6 +19,14 @@ namespace BrickBreaker.Bricks
             brickValueCounter.SetValue(BrickController.BrickModel.BrickValue);
         }
 
+        public void SetBrickDimensions()
+        {
+            float brickWidth = BrickController.BrickModel.BrickWidth;
+            float brickHeight = BrickController.BrickModel.BrickHeight;
+
+            transform.localScale = new Vector3(brickWidth, brickHeight, 1f);
+        }
+
         public void SetBrickActive(bool val)
         {
             gameObject.SetActive(val);
@@ -27,12 +35,17 @@ namespace BrickBreaker.Bricks
         public void Break()
         {
             BrickController.BrickModel.BrickValue--;
-            if (BrickController.BrickModel.BrickValue == 0)
+            if (BrickController.BrickModel.BrickValue <= 0)
             {
                 // set brick inactive  and return to the brick pool
                 BrickController.ReturnBrick?.Invoke(BrickController);
             }
             SetBrickValue();
+        }
+
+        public void SetPosition(Vector2 position)
+        {
+            transform.position = new Vector3(position.x, position.y, transform.position.z);
         }
     }
 }

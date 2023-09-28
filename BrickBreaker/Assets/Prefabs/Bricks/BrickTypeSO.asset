@@ -16,3 +16,5 @@ MonoBehaviour:
   - brickPrefab: {fileID: 2656544010723799990, guid: 3d2945ebe09f3214189da6b82f6f5857, type: 3}
     brickName: Normal
     brickBreakValue: 50
+    brickWidth: 2
+    brickHeight: 0.75
