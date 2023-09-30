@@ -14,5 +14,7 @@ namespace BrickBreaker.Bricks
         public BrickView brickPrefab;
         public string brickName;
         public int brickBreakValue;
+        public float brickWidth;
+        public float brickHeight;
     }
 }

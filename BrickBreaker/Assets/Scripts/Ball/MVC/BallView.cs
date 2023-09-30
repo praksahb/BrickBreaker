@@ -46,7 +46,6 @@ namespace BrickBreaker.Ball
 
             if (collision.gameObject.TryGetComponent<IBrickBreak>(out IBrickBreak brick))
             {
-                Debug.Log("Collision detected.");
                 brick.Break();
             }
         }
