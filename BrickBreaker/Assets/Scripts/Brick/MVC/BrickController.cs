@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 namespace BrickBreaker.Bricks
 {
@@ -9,10 +10,10 @@ namespace BrickBreaker.Bricks
 
         public Action<BrickController> ReturnBrick;
 
-        public BrickController(BrickModel brickModel, BrickView brickPrefab)
+        public BrickController(BrickModel brickModel, BrickView brickPrefab, Transform parentObj)
         {
             BrickModel = brickModel;
-            BrickView = UnityEngine.Object.Instantiate(brickPrefab);
+            BrickView = UnityEngine.Object.Instantiate(brickPrefab, parentObj, false);
             BrickView.BrickController = this;
             BrickView.SetBrickDimensions();
             BrickView.SetBrickActive(false);

@@ -1,13 +1,17 @@
+using UnityEngine;
+
 namespace BrickBreaker.Bricks
 {
     public class BrickServicePool
     {
         private GenericPooling<BrickController> brickPool;
         private Bricks brickType;
+        private Transform parentObj;
 
-        public BrickServicePool(int amount, Bricks brickType)
+        public BrickServicePool(int amount, Bricks brickType, Transform parentObj)
         {
             this.brickType = brickType;
+            this.parentObj = parentObj;
             brickPool = new GenericPooling<BrickController>(amount, CreateBrick);
         }
 
@@ -21,7 +25,7 @@ namespace BrickBreaker.Bricks
             //BrickView brickPrefab = brickType.brickPrefab;
 
             BrickModel brickModel = new BrickModel(brickType.brickBreakValue, brickType.brickWidth, brickType.brickHeight);
-            return new BrickController(brickModel, brickType.brickPrefab);
+            return new BrickController(brickModel, brickType.brickPrefab, parentObj);
         }
 
         public BrickController GetBrick()
