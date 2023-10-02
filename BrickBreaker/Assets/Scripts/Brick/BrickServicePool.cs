@@ -7,7 +7,12 @@ namespace BrickBreaker.Bricks
         private GenericPooling<BrickController> brickPool;
         private Bricks brickType;
         private Transform parentObj;
+        private int brickVal;
+        private float brickWidth;
+        private float brickHeight;
+        private BrickView brickPrefab;
 
+        // create brick from prefab fixed size
         public BrickServicePool(int amount, Bricks brickType, Transform parentObj)
         {
             this.brickType = brickType;
@@ -15,15 +20,25 @@ namespace BrickBreaker.Bricks
             brickPool = new GenericPooling<BrickController>(amount, CreateBrick);
         }
 
+        // create brick according to size given
+        public BrickServicePool(int amount, BrickView brickPrefab, Transform parentObj, int brickVal, float brickWidth, float brickHeight)
+        {
+            this.brickVal = brickVal;
+            this.brickWidth = brickWidth;
+            this.brickHeight = brickHeight;
+            this.brickPrefab = brickPrefab;
+            this.parentObj = parentObj;
+            brickPool = new GenericPooling<BrickController>(amount, CreateBrickCustom);
+        }
+
+        public BrickController CreateBrickCustom()
+        {
+            BrickModel brickModel = new BrickModel(brickVal, brickWidth, brickHeight);
+            return new BrickController(brickModel, brickPrefab, parentObj);
+        }
+
         public BrickController CreateBrick()
         {
-            // assign values or directly pass into params
-
-            //int brickVal = brickType.brickBreakValue;
-            //float brickWidth = brickType.brickWidth;
-            //float brickHeight = brickType.brickHeight;
-            //BrickView brickPrefab = brickType.brickPrefab;
-
             BrickModel brickModel = new BrickModel(brickType.brickBreakValue, brickType.brickWidth, brickType.brickHeight);
             return new BrickController(brickModel, brickType.brickPrefab, parentObj);
         }
