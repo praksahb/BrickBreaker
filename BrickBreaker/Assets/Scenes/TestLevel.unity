@@ -875,8 +875,8 @@ MonoBehaviour:
   totalBricks: 300
   brickOffsetX: 0
   brickOffsetY: 0
-  desiredRows: 5
-  desiredColumns: 5
+  desiredRows: 10
+  desiredColumns: 30
   brickVal: 5
 --- !u!4 &1424576238
 Transform:

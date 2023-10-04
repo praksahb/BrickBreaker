@@ -1,8 +1,12 @@
 
+using System;
+
 namespace BrickBreaker.Bricks
 {
     public class BrickModel
     {
+        public Action BreakBrick;
+
         private int brickValue;
         public int BrickValue
         {
@@ -13,6 +17,10 @@ namespace BrickBreaker.Bricks
             set
             {
                 brickValue = value;
+                if (brickValue == 0)
+                {
+                    BreakBrick?.Invoke();
+                }
             }
         }
 
