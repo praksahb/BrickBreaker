@@ -13,21 +13,19 @@ namespace BrickBreaker.Bricks
         public BrickController(BrickModel brickModel, BrickView brickPrefab, Transform parentObj)
         {
             BrickModel = brickModel;
-            BrickModel.BreakBrick += RemoveBrick;
             BrickView = UnityEngine.Object.Instantiate(brickPrefab, parentObj, false);
             BrickView.BrickController = this;
             BrickView.SetBrickSize(BrickModel.BrickWidth, BrickModel.BrickHeight);
             BrickView.SetBrickActive(false);
         }
 
-        private void RemoveBrick()
-        {
-            ReturnBrick?.Invoke(this);
-        }
-
         public void ReduceBrickValue()
         {
             BrickModel.BrickValue--;
+            if (BrickModel.BrickValue <= 0)
+            {
+                ReturnBrick?.Invoke(this);
+            }
             BrickView.SetBrickValue(BrickModel.BrickValue);
         }
     }
