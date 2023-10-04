@@ -188,7 +188,9 @@ namespace BrickBreaker.Bricks
         {
             BrickView brickPrefab = brickSO.allBricks[0].brickPrefab;
 
-            brickPool = new BrickServicePool(totalBricks, brickPrefab, brickPoolParent, brickVal, brickWidth, brickHeight);
+            Bricks brick = new Bricks("Custom", brickPrefab, brickVal, brickWidth, brickHeight);
+
+            brickPool = new BrickServicePool(totalBricks, brick, brickPoolParent);
         }
 
     }

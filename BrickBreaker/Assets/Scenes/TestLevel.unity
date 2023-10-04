@@ -872,11 +872,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   brickSO: {fileID: 11400000, guid: adb63c0876cdd364c8f050b9e2086c3c, type: 2}
   brickPoolParent: {fileID: 1043901}
-  totalBricks: 20
-  brickOffsetX: 0.1
+  totalBricks: 300
+  brickOffsetX: 0
   brickOffsetY: 0
-  desiredRows: 10
-  desiredColumns: 30
+  desiredRows: 5
+  desiredColumns: 5
   brickVal: 5
 --- !u!4 &1424576238
 Transform:

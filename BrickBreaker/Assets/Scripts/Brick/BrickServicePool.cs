@@ -5,42 +5,21 @@ namespace BrickBreaker.Bricks
     public class BrickServicePool
     {
         private GenericPooling<BrickController> brickPool;
-        private Bricks brickType;
+        private Bricks baseBrick;
         private Transform parentObj;
-        private int brickVal;
-        private float brickWidth;
-        private float brickHeight;
-        private BrickView brickPrefab;
 
-        // create brick from prefab fixed size
-        public BrickServicePool(int amount, Bricks brickType, Transform parentObj)
+        // create brick from Base Brick values
+        public BrickServicePool(int amount, Bricks baseBrick, Transform parentObj)
         {
-            this.brickType = brickType;
+            this.baseBrick = baseBrick;
             this.parentObj = parentObj;
             brickPool = new GenericPooling<BrickController>(amount, CreateBrick);
         }
 
-        // create brick according to size given
-        public BrickServicePool(int amount, BrickView brickPrefab, Transform parentObj, int brickVal, float brickWidth, float brickHeight)
-        {
-            this.brickVal = brickVal;
-            this.brickWidth = brickWidth;
-            this.brickHeight = brickHeight;
-            this.brickPrefab = brickPrefab;
-            this.parentObj = parentObj;
-            brickPool = new GenericPooling<BrickController>(amount, CreateBrickCustom);
-        }
-
-        public BrickController CreateBrickCustom()
-        {
-            BrickModel brickModel = new BrickModel(brickVal, brickWidth, brickHeight);
-            return new BrickController(brickModel, brickPrefab, parentObj);
-        }
-
         public BrickController CreateBrick()
         {
-            BrickModel brickModel = new BrickModel(brickType.brickBreakValue, brickType.brickWidth, brickType.brickHeight);
-            return new BrickController(brickModel, brickType.brickPrefab, parentObj);
+            BrickModel brickModel = new BrickModel(baseBrick.brickBreakValue, baseBrick.brickWidth, baseBrick.brickHeight);
+            return new BrickController(brickModel, baseBrick.brickPrefab, parentObj);
         }
 
         public BrickController GetBrick()
