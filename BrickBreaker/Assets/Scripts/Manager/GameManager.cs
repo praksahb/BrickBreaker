@@ -41,6 +41,8 @@ namespace BrickBreaker.Services
                 boundaryManager.MainCamera = mainCamera;
                 aimLineController.MainCamera = mainCamera;
             }
+
+            StartGame();
         }
 
         private void Start()
