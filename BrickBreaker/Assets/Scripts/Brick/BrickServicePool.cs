@@ -5,34 +5,28 @@ namespace BrickBreaker.Bricks
     public class BrickServicePool
     {
         private GenericPooling<BrickController> brickPool;
-        private Bricks brickType;
+        private Bricks baseBrick;
         private Transform parentObj;
 
-        public BrickServicePool(int amount, Bricks brickType, Transform parentObj)
+        // create brick from Base Brick values
+        public BrickServicePool(int amount, Bricks baseBrick, Transform parentObj)
         {
-            this.brickType = brickType;
+            this.baseBrick = baseBrick;
             this.parentObj = parentObj;
             brickPool = new GenericPooling<BrickController>(amount, CreateBrick);
         }
 
         public BrickController CreateBrick()
         {
-            // assign values or directly pass into params
-
-            //int brickVal = brickType.brickBreakValue;
-            //float brickWidth = brickType.brickWidth;
-            //float brickHeight = brickType.brickHeight;
-            //BrickView brickPrefab = brickType.brickPrefab;
-
-            BrickModel brickModel = new BrickModel(brickType.brickBreakValue, brickType.brickWidth, brickType.brickHeight);
-            return new BrickController(brickModel, brickType.brickPrefab, parentObj);
+            BrickModel brickModel = new BrickModel(baseBrick.brickBreakValue, baseBrick.brickWidth, baseBrick.brickHeight);
+            return new BrickController(brickModel, baseBrick.brickPrefab, parentObj);
         }
 
         public BrickController GetBrick()
         {
             BrickController brick = brickPool.GetObject();
             brick.BrickView.SetBrickActive(true);
-            brick.BrickView.SetBrickValue();
+            brick.BrickView.SetBrickValue(brick.BrickModel.BrickValue);
             return brick;
         }
 

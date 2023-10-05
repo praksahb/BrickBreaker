@@ -14,6 +14,7 @@ namespace BrickBreaker.Ball
         private void Awake()
         {
             Rigidbody2D = GetComponent<Rigidbody2D>();
+
         }
 
         public void SetBallActive(bool val)

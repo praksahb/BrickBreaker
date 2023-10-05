@@ -1,4 +1,3 @@
-
 namespace BrickBreaker.Bricks
 {
     public class BrickModel

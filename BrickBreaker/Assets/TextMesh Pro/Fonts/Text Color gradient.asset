@@ -9,12 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8096d924d982e304a992cd491185a8ef, type: 3}
-  m_Name: BrickTypeSO
+  m_Script: {fileID: 11500000, guid: 54d21f6ece3b46479f0c328f8c6007e0, type: 3}
+  m_Name: Text Color gradient
   m_EditorClassIdentifier: 
-  allBricks:
-  - brickPrefab: {fileID: 2656544010723799990, guid: 3d2945ebe09f3214189da6b82f6f5857, type: 3}
-    brickName: Normal
-    brickBreakValue: 5
-    brickWidth: 2
-    brickHeight: 0.75
+  colorMode: 3
+  topLeft: {r: 1, g: 1, b: 1, a: 1}
+  topRight: {r: 1, g: 1, b: 1, a: 1}
+  bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+  bottomRight: {r: 1, g: 1, b: 1, a: 1}

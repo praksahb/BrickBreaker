@@ -10,14 +10,21 @@ namespace BrickBreaker.Bricks
         [SerializeField] private float brickOffsetX;
         [SerializeField] private float brickOffsetY;
 
-        private int rows = 1;
-        private int columns = 10;
+        [SerializeField] private int desiredRows;
+        [SerializeField] private int desiredColumns;
+        [SerializeField] private int brickVal;
+
+        private int rows;
+        private int columns;
 
         private Camera mainCamera;
         private BrickServicePool brickPool;
 
         private BrickController[,] brickGrid; // 2D array stores all the bricks which can populate the grid box 
         private Vector2[,] gridPosition; // 2D array storing position values for the bricks
+
+        private float brickWidth;
+        private float brickHeight;
 
         private void Awake()
         {
@@ -26,9 +33,14 @@ namespace BrickBreaker.Bricks
 
         private void Start()
         {
-            InitializeBrickPool();
-            DefineGridSize();
-            SetupBrickGrid();
+            //InitializeBrickPool();
+            //DefineGrid();
+
+            // creating custom block of bricks
+            DefineGridCustom();
+            InitializeCustomPool();
+
+            InitializeGrid();
         }
 
         private void InitializeBrickPool()
@@ -38,33 +50,27 @@ namespace BrickBreaker.Bricks
             brickPool = new BrickServicePool(totalBricks, brickType, brickPoolParent);
         }
 
-        private void DefineGridSize()
+        // gets the height and width of the grid, and the starting point to place the parent of the bricks at top left corner
+        private void DefineGrid() // from brick dimension
         {
             float totalLength, totalHeight;
             FindGridArea(out totalLength, out totalHeight);
 
             BrickController temp = brickPool.GetBrick();
             temp.ReturnBrick += ReturnBrick;
-
-            // cal. rows and columns which can be fit into the totalLength and totalHeight of top half of screen
             float brickWidth = temp.BrickModel.BrickWidth;
             float brickHeight = temp.BrickModel.BrickHeight;
-            CalculateRows(totalHeight, brickHeight);
-            CalculateColumns(totalLength, brickWidth, out float leftoverSpace);
-            //Debug.Log("Rows: " + rows);
-            //Debug.Log("Cols: " + columns);
+            temp.ReturnBrick?.Invoke(temp);
 
-            // calculate starting point to set brickPoolParent at
-            CalculateStartingPoint(brickHeight, brickWidth, leftoverSpace);
+            CalculateRows(totalHeight, brickHeight, out float leftoverSpaceY);
+            CalculateColumns(totalLength, brickWidth, out float leftoverSpaceX);
+            CalculateStartingPoint(brickHeight, brickWidth, leftoverSpaceX, leftoverSpaceY);
 
             // plot transform values for the bricks
-            SetupGridPositions(temp);
-
-            // return temp brick used for measurement
-            temp.ReturnBrick?.Invoke(temp);
+            SetupGridPositions(brickWidth, brickHeight);
         }
 
-        private void SetupGridPositions(BrickController brick)
+        private void SetupGridPositions(float brickWidth, float brickHeight)
         {
             gridPosition = new Vector2[rows, columns];
 
@@ -73,16 +79,15 @@ namespace BrickBreaker.Bricks
                 for (int col = 0; col < columns; col++)
                 {
                     // Calculate the position based on row and column indices
-                    float xPosition = col * (brick.BrickModel.BrickWidth + brickOffsetX);
-                    float yPosition = -row * (brick.BrickModel.BrickHeight + brickOffsetY);
-
+                    float xPosition = col * (brickWidth + brickOffsetX);
+                    float yPosition = -row * (brickHeight + brickOffsetY);
                     gridPosition[row, col] = new Vector2(xPosition, yPosition);
                 }
             }
         }
 
         // Populate the array with bricks in a basic rectangular shape
-        private void SetupBrickGrid()
+        private void InitializeGrid()
         {
             brickGrid = new BrickController[rows, columns];
 
@@ -97,7 +102,6 @@ namespace BrickBreaker.Bricks
                     float xPosition = gridPosition[row, col].x;
                     float yPosition = gridPosition[row, col].y;
 
-                    // Set the brick's position and assign it in brickGrid
                     brick.BrickView.SetPosition(new Vector2(xPosition, yPosition));
                     brickGrid[row, col] = brick;
                 }
@@ -105,43 +109,46 @@ namespace BrickBreaker.Bricks
         }
 
         // Helpers for defining the size of the grid(rows and column values) from the screen size
+
         // Calculate the length and height of the box
-        private void FindGridArea(out float boxLength, out float boxHeight)
+        // grid box is being defined as upper half of the screen space where bricks can be placed
+        private void FindGridArea(out float boxWidth, out float boxHeight)
         {
-            float screenHeight = mainCamera.orthographicSize * 2f;
-            float screenWidth = screenHeight * mainCamera.aspect;
-            float halfScreenHeight = screenHeight / 2f;
+            boxHeight = mainCamera.orthographicSize;
+            boxWidth = boxHeight * 2f * mainCamera.aspect;
 
-            Vector3 boxSize = new Vector3(screenWidth, halfScreenHeight, 0f);
-
-            boxLength = boxSize.x;
-            boxHeight = boxSize.y;
+            Debug.Log("tot Height: " + boxHeight);
+            Debug.Log("tot width: " + boxWidth);
         }
 
         // Calculate the number of columns that can fit in the box
-        private void CalculateColumns(float boxLength, float brickWidth, out float leftoverSpace)
+        private void CalculateColumns(float boxLength, float brickWidth, out float leftoverSpaceX)
         {
             float availableLength = boxLength - brickOffsetX;
             columns = Mathf.FloorToInt(availableLength / (brickWidth + brickOffsetX));
             // Calculate the leftover space at the end
-            leftoverSpace = boxLength - (columns * (brickWidth + brickOffsetX));
+            leftoverSpaceX = boxLength - (columns * (brickWidth + brickOffsetX));
         }
-
-        private void CalculateRows(float boxHeight, float brickHeight)
+        // Calculates the number of rows which can fit the box
+        private void CalculateRows(float boxHeight, float brickHeight, out float leftoverSpaceY)
         {
             float availableHeight = boxHeight - brickOffsetY;
             rows = Mathf.FloorToInt(availableHeight / (brickHeight + brickOffsetY));
+
+            leftoverSpaceY = boxHeight - (rows * (brickHeight + brickOffsetY));
         }
+
         // the parent obj - brickPool will be set at the top left corner
-        private void CalculateStartingPoint(float brickHeight, float brickWidth, float leftoverSpace)
+        private void CalculateStartingPoint(float brickHeight, float brickWidth, float leftoverSpaceX = 0, float leftoverSpaceY = 0)
         {
             // get top left corner point from camera
             Vector2 startPoint = mainCamera.ViewportToWorldPoint(new Vector2(0, 1));
             // center the grid columns to be equi-distant from both ends
-            float adjustedLeftoverSpace = leftoverSpace + brickOffsetX;
+            float totalSpaceX = leftoverSpaceX + brickOffsetX;
+            float totalSpaceY = leftoverSpaceY + brickOffsetY;
 
-            startPoint.x += adjustedLeftoverSpace / 2 + brickWidth / 2;
-            startPoint.y -= brickOffsetY + brickHeight / 2;
+            startPoint.x += totalSpaceX / 2 + brickWidth / 2;
+            startPoint.y -= totalSpaceY / 2 + brickHeight / 2;
 
             brickPoolParent.position = startPoint;
         }
@@ -152,5 +159,36 @@ namespace BrickBreaker.Bricks
             brick.ReturnBrick -= ReturnBrick;
             brickPool.ReturnBrick(brick);
         }
+
+
+        // Method 2. creating brick of fixed sizes from the desired rows and column values.
+        // and feeding it to the brick initialization function to create the bricks of the specific sizes.
+
+        private void DefineGridCustom() // from row, col values.
+        {
+            // Get brick sizes
+            FindGridArea(out float totalWidth, out float totalHeight);
+            brickWidth = totalWidth / desiredColumns;
+            brickHeight = totalHeight / desiredRows;
+
+            rows = desiredRows;
+            columns = desiredColumns;
+
+            // Get starting point for parent
+            CalculateStartingPoint(brickHeight, brickWidth);
+
+            // plot grid
+            SetupGridPositions(brickWidth, brickHeight);
+        }
+
+        private void InitializeCustomPool()
+        {
+            BrickView brickPrefab = brickSO.allBricks[0].brickPrefab;
+
+            Bricks brick = new Bricks("Custom", brickPrefab, brickVal, brickWidth, brickHeight);
+
+            brickPool = new BrickServicePool(totalBricks, brick, brickPoolParent);
+        }
+
     }
 }

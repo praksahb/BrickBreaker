@@ -7,23 +7,20 @@ namespace BrickBreaker.Bricks
     {
         public BrickController BrickController { get; set; }
 
-        private BrickValueCounter brickValueCounter;
+        private BrickValueCounter brickValueCounter; // ui script for changing value of brick
 
         private void Awake()
         {
             brickValueCounter = GetComponentInChildren<BrickValueCounter>();
         }
 
-        public void SetBrickValue()
+        public void SetBrickValue(int value)
         {
-            brickValueCounter.SetValue(BrickController.BrickModel.BrickValue);
+            brickValueCounter.SetValue(value);
         }
 
-        public void SetBrickDimensions()
+        public void SetBrickSize(float brickWidth, float brickHeight)
         {
-            float brickWidth = BrickController.BrickModel.BrickWidth;
-            float brickHeight = BrickController.BrickModel.BrickHeight;
-
             transform.localScale = new Vector3(brickWidth, brickHeight, 1f);
         }
 
@@ -34,13 +31,7 @@ namespace BrickBreaker.Bricks
 
         public void Break()
         {
-            BrickController.BrickModel.BrickValue--;
-            if (BrickController.BrickModel.BrickValue <= 0)
-            {
-                // set brick inactive  and return to the brick pool
-                BrickController.ReturnBrick?.Invoke(BrickController);
-            }
-            SetBrickValue();
+            BrickController.ReduceBrickValue();
         }
 
         public void SetPosition(Vector2 position)
