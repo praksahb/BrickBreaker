@@ -1,36 +1,43 @@
-using BrickBreaker.Services;
+using BrickBreaker.UI;
 using System;
 using UnityEngine;
 
-namespace BallBreaker
+namespace BallBreaker.UI
 {
     public class UIManager : MonoBehaviour
     {
         [SerializeField] private MainMenuPanel mainMenuPanel;
-        [SerializeField] private GameManager gameManager;
+        [SerializeField] private PlayMenuPanel playMenuPanel;
 
-        public Action StartGame;
+        public Action LaunchPlayMenu;
 
         private void Awake()
         {
-            mainMenuPanel.UIManager = this;
-            mainMenuPanel.gameObject.SetActive(true);
+            InitializeMenu();
         }
 
         private void OnEnable()
         {
-            StartGame += StartGameFunction;
+            LaunchPlayMenu += EnablePlayMenu;
         }
 
         private void OnDisable()
         {
-            StartGame -= StartGameFunction;
+            LaunchPlayMenu -= EnablePlayMenu;
         }
 
-        private void StartGameFunction()
+        private void InitializeMenu()
+        {
+            mainMenuPanel.UIManager = this;
+            playMenuPanel.UIManager = this;
+            mainMenuPanel.gameObject.SetActive(true);
+            playMenuPanel.gameObject.SetActive(false);
+        }
+
+        private void EnablePlayMenu()
         {
             mainMenuPanel.gameObject.SetActive(false);
-            gameManager.StartGame();
+            playMenuPanel.gameObject.SetActive(true);
         }
     }
 }

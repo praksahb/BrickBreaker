@@ -1,27 +1,26 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace BallBreaker
+namespace BallBreaker.UI
 {
     public class MainMenuPanel : MonoBehaviour
     {
-        [SerializeField] private Button startGame;
+        [SerializeField] private Button playButton;
 
         public UIManager UIManager { get; set; }
 
-
         private void OnEnable()
         {
-            startGame.onClick.AddListener(LaunchGame);
+            playButton.onClick.AddListener(PlayGame);
         }
         private void OnDisable()
         {
-            startGame.onClick.RemoveListener(LaunchGame);
+            playButton.onClick.RemoveListener(PlayGame);
         }
 
-        private void LaunchGame()
+        private void PlayGame()
         {
-            UIManager.StartGame?.Invoke();
+            UIManager.LaunchPlayMenu?.Invoke();
         }
     }
 }
