@@ -14,8 +14,8 @@ namespace BrickBreaker.Bricks
         [SerializeField] private int desiredColumns;
         [SerializeField] private int brickVal;
 
-        private int rows = 1;
-        private int columns = 10;
+        private int rows;
+        private int columns;
 
         private Camera mainCamera;
         private BrickServicePool brickPool;
@@ -170,9 +170,6 @@ namespace BrickBreaker.Bricks
             FindGridArea(out float totalWidth, out float totalHeight);
             brickWidth = totalWidth / desiredColumns;
             brickHeight = totalHeight / desiredRows;
-
-            Debug.Log("Bwidth: " + brickWidth);
-            Debug.Log("Bheight: " + brickHeight);
 
             rows = desiredRows;
             columns = desiredColumns;
