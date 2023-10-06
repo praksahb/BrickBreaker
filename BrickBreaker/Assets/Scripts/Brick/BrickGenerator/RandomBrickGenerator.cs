@@ -10,8 +10,8 @@ namespace BrickBreaker.Bricks
         [SerializeField] private int brickVal;
 
         private BrickManager brickManager;
-        float brickWidth;
-        float brickHeight;
+        private float brickWidth;
+        private float brickHeight;
 
         private void Awake()
         {
@@ -21,8 +21,6 @@ namespace BrickBreaker.Bricks
         private void Start()
         {
             DefineGridCustom();
-            brickManager.InitializeCustomPool(brickVal, brickWidth, brickHeight);
-            brickManager.InitializeGrid();
         }
 
         // Method 2. creating brick of fixed sizes from the desired rows and column values.
@@ -34,17 +32,15 @@ namespace BrickBreaker.Bricks
             brickManager.FindGridArea(out float totalWidth, out float totalHeight);
             brickWidth = totalWidth / desiredColumns;
             brickHeight = totalHeight / desiredRows;
-            Debug.Log("brickWidth: " + brickWidth);
-            Debug.Log("brickHeight: " + brickHeight);
 
-            brickManager.SetGridSize(desiredRows, desiredColumns);
+            //brickManager.SetGridSize(desiredRows, desiredColumns);
 
             // Get starting point for parent
             BrickSize brick = new BrickSize(brickWidth, brickHeight);
-            brickManager.CalculateStartingPoint(brick);
+            brickManager.SetParentPosition(brick);
 
-            // plot grid
-            brickManager.SetupGridPositions(brickWidth, brickHeight);
+            // setup grid
+            brickManager.InitializeBrickGrid(brick, desiredRows, desiredColumns, brickVal);
         }
     }
 }

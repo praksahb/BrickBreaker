@@ -169,6 +169,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   brickOffsetX: 0.5
   brickOffsetY: 0.5
+  brickValue: 5
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -427,11 +428,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e07886ea82d12b44d951676f802e6a24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  brickSO: {fileID: 11400000, guid: adb63c0876cdd364c8f050b9e2086c3c, type: 2}
+  brickPrefab: {fileID: 2656544010723799990, guid: 3d2945ebe09f3214189da6b82f6f5857, type: 3}
   brickPoolParent: {fileID: 1043901}
-  desiredRows: 10
-  desiredColumns: 30
-  brickVal: 5
+  mainCamera: {fileID: 519420031}
 --- !u!4 &1424576238
 Transform:
   m_ObjectHideFlags: 0

@@ -278,9 +278,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8766ab0a265941a4a8171800f4155aff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  desiredRows: 20
-  desiredColumns: 50
-  brickVal: 10
+  desiredRows: 8
+  desiredColumns: 20
+  brickVal: 6
 --- !u!1 &969848293
 GameObject:
   m_ObjectHideFlags: 0
@@ -496,8 +496,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e07886ea82d12b44d951676f802e6a24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  brickSO: {fileID: 11400000, guid: adb63c0876cdd364c8f050b9e2086c3c, type: 2}
+  brickPrefab: {fileID: 2656544010723799990, guid: 3d2945ebe09f3214189da6b82f6f5857, type: 3}
   brickPoolParent: {fileID: 889789827}
+  mainCamera: {fileID: 1392484743}
 --- !u!4 &1941245276
 Transform:
   m_ObjectHideFlags: 0

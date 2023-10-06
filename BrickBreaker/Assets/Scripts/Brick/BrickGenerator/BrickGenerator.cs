@@ -7,6 +7,7 @@ namespace BrickBreaker.Bricks
     {
         [SerializeField] private float brickOffsetX;
         [SerializeField] private float brickOffsetY;
+        [SerializeField] private int brickValue;
 
         private BrickManager brickManager;
 
@@ -18,14 +19,11 @@ namespace BrickBreaker.Bricks
         private void Start()
         {
             DefineGrid();
-            brickManager.InitializeBrickPool();
-            brickManager.InitializeGrid();
         }
 
         private void DefineGrid() // from brick dimension
         {
-            float totalLength, totalHeight;
-            brickManager.FindGridArea(out totalLength, out totalHeight);
+            brickManager.FindGridArea(out float totalLength, out float totalHeight);
 
             // get brick size (w * h)
             Vector2 brickSize = brickManager.GetBrickSize();
@@ -33,14 +31,12 @@ namespace BrickBreaker.Bricks
             int rows = CalculateRows(totalHeight, brickSize.y, out float leftoverSpaceY);
             int columns = CalculateColumns(totalLength, brickSize.x, out float leftoverSpaceX);
 
-            brickManager.SetGridSize(rows, columns);
-
             // get starting point for parent transform
             BrickSize brick = new BrickSize(brickSize.x, brickSize.y, brickOffsetX, brickOffsetY);
-            brickManager.CalculateStartingPoint(brick, leftoverSpaceX, leftoverSpaceY);
+            brickManager.SetParentPosition(brick, leftoverSpaceX, leftoverSpaceY);
 
-            // plot transform values for the bricks
-            brickManager.SetupGridPositions(brickSize.x, brickSize.y, brickOffsetX, brickOffsetY);
+            // setup grid
+            brickManager.InitializeBrickGrid(brick, rows, columns, brickValue);
         }
 
         // Calculate the number of columns that can fit in the box
