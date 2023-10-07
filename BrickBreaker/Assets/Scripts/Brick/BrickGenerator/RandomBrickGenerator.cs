@@ -21,6 +21,7 @@ namespace BrickBreaker.Bricks
         private void Start()
         {
             DefineGridCustom();
+            brickManager.CheckGridWorks();
         }
 
         // Method 2. creating brick of fixed sizes from the desired rows and column values.

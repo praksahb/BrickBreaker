@@ -41,11 +41,23 @@ namespace BrickBreaker.Bricks
             }
         }
 
+        public BrickState CurrentState { get; private set; }
+
+        public BrickState NextState { get; set; }
+
+        public void UpdateCurrentState()
+        {
+            CurrentState = NextState;
+            NextState = BrickState.None;
+        }
+
         public BrickModel(int brickVal, float brickWidth, float brickHeight)
         {
             BrickValue = brickVal;
             BrickWidth = brickWidth;
             BrickHeight = brickHeight;
+            CurrentState = BrickState.None;
+            NextState = BrickState.None;
         }
     }
 }

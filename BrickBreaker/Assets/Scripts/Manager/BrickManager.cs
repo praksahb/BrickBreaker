@@ -24,7 +24,7 @@ namespace BrickBreaker.Bricks
         }
 
         // create brick pool of totalBricks size
-        private void InitializeCustomPool(int brickVal, float brickWidth, float brickHeight)
+        private void InitializePool(int brickVal, float brickWidth, float brickHeight)
         {
             Bricks brick = new Bricks("Custom", brickPrefab, brickVal, brickWidth, brickHeight);
             int totalBricks = maxRows * maxColumns;
@@ -47,15 +47,19 @@ namespace BrickBreaker.Bricks
         // creates brickGrid
         public void InitializeBrickGrid(BrickSize brick, int maxRows, int maxColumns, int brickValue)
         {
-            InitializeCustomPool(brickValue, brick.brickWidth, brick.brickHeight);
+            InitializePool(brickValue, brick.brickWidth, brick.brickHeight);
 
             brickGrid = new BrickGrid(this, maxRows, maxColumns, brick);
         }
 
+        public void CheckGridWorks()
+        {
+            brickGrid.GridTraversal();
+        }
+
         // Helpers for defining the size of the grid(rows and column values) from the screen size
 
-        // Calculate the length and height of the box
-        // grid box is being defined as upper half of the screen space where bricks can be placed
+        // Calculate the length and height of top half of screen space
         public void FindGridArea(out float boxWidth, out float boxHeight)
         {
             boxHeight = mainCamera.orthographicSize;

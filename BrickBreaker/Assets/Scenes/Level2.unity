@@ -278,8 +278,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8766ab0a265941a4a8171800f4155aff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  desiredRows: 8
-  desiredColumns: 20
+  desiredRows: 10
+  desiredColumns: 10
   brickVal: 6
 --- !u!1 &969848293
 GameObject:
