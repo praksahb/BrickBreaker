@@ -1,13 +1,13 @@
+using BrickBreaker.Services;
 using UnityEngine;
 
 namespace BrickBreaker.Bricks
 
 {
-    public class RandomBrickGenerator : MonoBehaviour
+    public class RandomBrickGenerator : IBrickGenerator
     {
         [SerializeField] private int desiredRows;
         [SerializeField] private int desiredColumns;
-        [SerializeField] private int brickVal;
 
         private BrickManager brickManager;
         private float brickWidth;
@@ -18,16 +18,11 @@ namespace BrickBreaker.Bricks
             brickManager = GetComponentInParent<BrickManager>();
         }
 
-        private void Start()
-        {
-            DefineGridCustom();
-            brickManager.CheckGridWorks();
-        }
 
         // Method 2. creating brick of fixed sizes from the desired rows and column values.
         // and feeding it to the brick initialization function to create the bricks of the specific sizes.
 
-        private void DefineGridCustom() // from row, col values.
+        public override void DefineGrid(GameManager gameManager) // from row, col values.
         {
             // Get brick sizes
             brickManager.FindGridArea(out float totalWidth, out float totalHeight);
@@ -37,11 +32,16 @@ namespace BrickBreaker.Bricks
             //brickManager.SetGridSize(desiredRows, desiredColumns);
 
             // Get starting point for parent
-            BrickSize brick = new BrickSize(brickWidth, brickHeight);
-            brickManager.SetParentPosition(brick);
+            BrickLayout brick = new BrickLayout(brickWidth, brickHeight);
+            brickManager.SetStartPosition(brick);
 
             // setup grid
-            brickManager.InitializeBrickGrid(brick, desiredRows, desiredColumns, brickVal);
+            brickManager.InitializeBrickGrid(brick, desiredRows, desiredColumns, gameManager);
+        }
+
+        public override void PerformFunction()
+        {
+            // To be created, randomize bricks after all balls have returned..
         }
     }
 }

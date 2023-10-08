@@ -11,14 +11,18 @@ namespace BrickBreaker.Bricks
 
         private int maxRows;
         private int maxColumns;
-        private BrickSize brick;
+        private BrickLayout brickLayout; // brick dimensions / brick configuration
 
-        public BrickGrid(BrickManager brickManager, int maxRows, int maxColumns, BrickSize brick)
+        private int currentBrickVal;
+
+        public BrickGrid(BrickManager brickManager, int maxRows, int maxColumns, BrickLayout brick)
         {
             this.brickManager = brickManager;
             this.maxRows = maxRows;
             this.maxColumns = maxColumns;
-            this.brick = brick;
+            this.brickLayout = brick;
+
+            currentBrickVal = maxRows;
 
             SetupGridPositions();
             InitializeGrid();
@@ -33,10 +37,27 @@ namespace BrickBreaker.Bricks
                 for (int col = 0; col < maxColumns; col++)
                 {
                     // Calculate the position based on row and column indices
-                    float xPosition = col * (brick.brickWidth + brick.brickOffsetX);
-                    float yPosition = -row * (brick.brickHeight + brick.brickOffsetY);
+                    float xPosition = col * (brickLayout.brickWidth + brickLayout.brickOffsetX);
+                    float yPosition = -row * (brickLayout.brickHeight + brickLayout.brickOffsetY);
                     gridPosition[row, col] = new Vector2(xPosition, yPosition);
                 }
+            }
+        }
+
+        // add a row of bricks at the top - working with world space values
+        public void AddBrickRow(Vector2 startPos)
+        {
+            currentBrickVal++;
+
+            for (int i = 0; i < maxColumns; i++)
+            {
+                float xPos = startPos.x + i * (brickLayout.brickWidth + brickLayout.brickOffsetX);
+                float yPos = startPos.y;
+
+                BrickController brick = brickManager.GetBrick();
+                brick.BrickModel.BrickValue = currentBrickVal;
+                brick.BrickView.SetBrickValue(brick.BrickModel.BrickValue);
+                brick.BrickView.SetWorldPosition(xPos, yPos);
             }
         }
 
@@ -51,6 +72,10 @@ namespace BrickBreaker.Bricks
                 {
                     BrickController brick = brickManager.GetBrick();
 
+                    // set brickVal to row no.
+                    brick.BrickModel.BrickValue = currentBrickVal;
+                    brick.BrickView.SetBrickValue(brick.BrickModel.BrickValue);
+
                     // Get position from gridPosition 
                     float xPosition = gridPosition[row, col].x;
                     float yPosition = gridPosition[row, col].y;
@@ -58,7 +83,9 @@ namespace BrickBreaker.Bricks
                     brick.BrickView.SetPosition(new Vector2(xPosition, yPosition));
                     brickGrid[row, col] = brick;
                 }
+                currentBrickVal--;
             }
+            currentBrickVal = maxRows;
         }
 
         // check if valid row, col value
