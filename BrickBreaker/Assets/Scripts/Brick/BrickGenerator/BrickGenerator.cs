@@ -10,6 +10,7 @@ namespace BrickBreaker.Bricks
         [SerializeField] private float brickOffsetY;
 
         private BrickManager brickManager;
+        private float brickHeight;
 
         private void Awake()
         {
@@ -32,11 +33,14 @@ namespace BrickBreaker.Bricks
 
             // setup grid
             brickManager.InitializeBrickGrid(brick, rows, columns, gameManager);
+
+            // store brick height value for later
+            brickHeight = brickSize.y;
         }
 
         public override void PerformFunction()
         {
-            brickManager.MoveBrickParentPosition();
+            brickManager.MoveBrickParentPosition(brickHeight, brickOffsetY);
         }
 
         // Calculate the number of columns that can fit in the box

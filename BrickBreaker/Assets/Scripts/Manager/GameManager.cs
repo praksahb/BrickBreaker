@@ -11,6 +11,7 @@ namespace BrickBreaker.Services
         [SerializeField] private BallView ballPrefab;
         [SerializeField] private Transform firePoint;
         [SerializeField] private IBrickGenerator brickGenerator;
+        [SerializeField] private GameOverPanel gameOverPanel;
         [SerializeField] private int ballSpeed;
         [SerializeField] private int ballPoolSize;
         [SerializeField] private float AimLineLength;
@@ -76,6 +77,7 @@ namespace BrickBreaker.Services
 
         private void StartGame()
         {
+            gameOverPanel.gameObject.SetActive(false);
             InitializeGame();
             isAiming = true;
         }
@@ -84,6 +86,7 @@ namespace BrickBreaker.Services
         {
             isAiming = false;
             // load game over screen panel
+            gameOverPanel.gameObject.SetActive(true);
             Debug.Log("Game over.");
         }
 
@@ -93,6 +96,7 @@ namespace BrickBreaker.Services
             SetFirePoint();
             boundaryManager.SetBoundaries();
             aimLineController.SetLineValues(AimLineLength, maxReflections, lineOffset);
+
             brickGenerator.DefineGrid(this);
         }
 

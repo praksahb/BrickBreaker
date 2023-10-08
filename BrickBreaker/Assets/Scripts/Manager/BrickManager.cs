@@ -13,8 +13,6 @@ namespace BrickBreaker.Bricks
         private BrickGrid brickGrid;
 
         private Vector2 startPosition;
-        private float brickHeight;
-        private float offsetY;
 
         // function is called when action is invoked from brickController
         private void ReturnBrick(BrickController brick)
@@ -26,7 +24,6 @@ namespace BrickBreaker.Bricks
         // create brick pool of totalBricks size
         private void InitializePool(float brickWidth, float brickHeight, int maxRows, int maxColumns, GameManager gameManager)
         {
-            this.brickHeight = brickHeight;
             Bricks brick = new Bricks("Custom", brickPrefab, brickWidth, brickHeight);
             int totalBricks = maxRows * maxColumns;
             brickPool = new BrickServicePool(totalBricks, brick, brickPoolParent, gameManager);
@@ -51,10 +48,11 @@ namespace BrickBreaker.Bricks
             InitializePool(brick.brickWidth, brick.brickHeight, maxRows, maxColumns, gameManager);
 
             brickGrid = new BrickGrid(this, maxRows, maxColumns, brick);
+            brickGrid.InitializeGrid();
         }
 
         // move parent brick obj -1.25 (brickHeight + offsetY) in y-axis
-        public void MoveBrickParentPosition()
+        public void MoveBrickParentPosition(float brickHeight, float offsetY)
         {
             // storing as member variables currently till i can see how it can be called maybe from brickGenerator script as im not using singletons atm
             float moveValue = brickHeight + offsetY;
@@ -94,7 +92,6 @@ namespace BrickBreaker.Bricks
             //store start point for use later in level 1
             startPosition = startPoint;
             Debug.Log("Start: " + startPosition);
-            offsetY = brick.brickOffsetY; // saving as variable for use in level 1
 
             brickPoolParent.position = startPoint;
         }

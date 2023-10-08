@@ -22,10 +22,7 @@ namespace BrickBreaker.Bricks
             this.maxColumns = maxColumns;
             this.brickLayout = brick;
 
-            currentBrickVal = maxRows;
-
             SetupGridPositions();
-            InitializeGrid();
         }
 
         private void SetupGridPositions()
@@ -44,28 +41,12 @@ namespace BrickBreaker.Bricks
             }
         }
 
-        // add a row of bricks at the top - working with world space values
-        public void AddBrickRow(Vector2 startPos)
-        {
-            currentBrickVal++;
-
-            for (int i = 0; i < maxColumns; i++)
-            {
-                float xPos = startPos.x + i * (brickLayout.brickWidth + brickLayout.brickOffsetX);
-                float yPos = startPos.y;
-
-                BrickController brick = brickManager.GetBrick();
-                brick.BrickModel.BrickValue = currentBrickVal;
-                brick.BrickView.SetBrickValue(brick.BrickModel.BrickValue);
-                brick.BrickView.SetWorldPosition(xPos, yPos);
-            }
-        }
-
         // Populate the array with bricks in a basic rectangular shape
-        private void InitializeGrid()
+        public void InitializeGrid()
         {
             brickGrid = new BrickController[maxRows, maxColumns];
 
+            currentBrickVal = maxRows;
             for (int row = 0; row < maxRows; row++)
             {
                 for (int col = 0; col < maxColumns; col++)
@@ -87,6 +68,27 @@ namespace BrickBreaker.Bricks
             }
             currentBrickVal = maxRows;
         }
+
+        // Level 1 
+
+        // add a row of bricks at the top - working with world space values
+        public void AddBrickRow(Vector2 startPos)
+        {
+            currentBrickVal++;
+
+            for (int i = 0; i < maxColumns; i++)
+            {
+                float xPos = startPos.x + i * (brickLayout.brickWidth + brickLayout.brickOffsetX);
+                float yPos = startPos.y;
+
+                BrickController brick = brickManager.GetBrick();
+                brick.BrickModel.BrickValue = currentBrickVal;
+                brick.BrickView.SetBrickValue(brick.BrickModel.BrickValue);
+                brick.BrickView.SetWorldPosition(xPos, yPos);
+            }
+        }
+
+        // Level 2
 
         // check if valid row, col value
         private bool IsValidCell(int row, int col)
