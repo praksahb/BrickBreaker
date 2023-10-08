@@ -8,9 +8,10 @@ namespace BrickBreaker.Services
     {
         [SerializeField] private Camera mainCamera;
         [SerializeField] private BallView ballPrefab;
+        [SerializeField] private Transform firePoint;
+        [SerializeField] private IBrickGenerator brickGenerator;
         [SerializeField] private int ballSpeed;
         [SerializeField] private int ballPoolSize;
-        [SerializeField] private Transform firePoint;
         [SerializeField] private float AimLineLength;
         [SerializeField] private int maxReflections;
         [SerializeField] private float lineOffset;
@@ -29,7 +30,7 @@ namespace BrickBreaker.Services
         private Coroutine LaunchBallCoroutine;
 
         private bool isAiming;
-        private int count;
+        private int ballCount;
         private Vector2 newFirePosition;
 
         private void Awake()
@@ -91,8 +92,8 @@ namespace BrickBreaker.Services
             {
                 StopCoroutine(LaunchBallCoroutine);
             }
+            ballCount = 0;
             LaunchBallCoroutine = StartCoroutine(LaunchBalls(launchPos));
-            count = 0;
         }
 
         private IEnumerator LaunchBalls(Vector2 launchPos)
@@ -112,16 +113,17 @@ namespace BrickBreaker.Services
         private void ReturnBall(BallController ball)
         {
             ball.ReturnBall -= ReturnBall;
-            if (count == 0)
+            if (ballCount == 0)
             {
                 //update x value of transform.position of firePoint, update firePos after all balls have been launched or after all balls returned
                 newFirePosition = firePoint.transform.position;
                 newFirePosition.x = ball.BallView.transform.position.x;
             }
             ballServicePool.ReturnBall(ball);
-            count++;
-            if (count == ballPoolSize)
+            ballCount++;
+            if (ballCount == ballPoolSize)
             {
+                brickGenerator.PerformFunction();
                 firePoint.transform.position = newFirePosition;
                 isAiming = true;
             }

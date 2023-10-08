@@ -167,9 +167,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef84ec37179c1bf49bc5a3141b8e6a13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  brickOffsetX: 0.5
-  brickOffsetY: 0.5
-  brickValue: 5
+  brickOffsetX: 2
+  brickOffsetY: 2
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -495,9 +494,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 519420031}
   ballPrefab: {fileID: -2775649247503592894, guid: 98a1c9097b3bd9644acd89aeb8f15ce9, type: 3}
-  ballSpeed: 20
-  ballPoolSize: 100
   firePoint: {fileID: 1646059455}
+  brickGenerator: {fileID: 1043902}
+  ballSpeed: 20
+  ballPoolSize: 5
   AimLineLength: 50
   maxReflections: 2
   lineOffset: 0.01

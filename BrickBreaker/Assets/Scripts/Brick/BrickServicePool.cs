@@ -18,7 +18,7 @@ namespace BrickBreaker.Bricks
 
         public BrickController CreateBrick()
         {
-            BrickModel brickModel = new BrickModel(baseBrick.brickBreakValue, baseBrick.brickWidth, baseBrick.brickHeight);
+            BrickModel brickModel = new BrickModel(baseBrick.brickWidth, baseBrick.brickHeight);
             return new BrickController(brickModel, baseBrick.brickPrefab, parentObj);
         }
 

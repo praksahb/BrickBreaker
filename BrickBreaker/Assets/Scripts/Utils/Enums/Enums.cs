@@ -7,3 +7,13 @@ namespace BrickBreaker.Bricks
         Inactive
     }
 }
+
+namespace BrickBreaker
+{
+    public enum PlayLevel
+    {
+        Menu = 0,
+        Classic = 1,
+        NewType = 2,
+    }
+}

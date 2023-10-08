@@ -37,7 +37,11 @@ namespace BrickBreaker.Bricks
         public void SetPosition(Vector2 position)
         {
             transform.localPosition = new Vector3(position.x, position.y, transform.position.z);
-            //transform.position = new Vector3(position.x, position.y, transform.position.z);
+        }
+
+        public void SetWorldPosition(float positionX, float positionY)
+        {
+            transform.position = new Vector3(positionX, positionY, transform.position.z);
         }
     }
 }

@@ -3,11 +3,10 @@ using UnityEngine;
 namespace BrickBreaker.Bricks
 {
     // Generate square bricks with offset - used in level 1
-    public class BrickGenerator : MonoBehaviour
+    public class BrickGenerator : IBrickGenerator
     {
         [SerializeField] private float brickOffsetX;
         [SerializeField] private float brickOffsetY;
-        [SerializeField] private int brickValue;
 
         private BrickManager brickManager;
 
@@ -21,7 +20,7 @@ namespace BrickBreaker.Bricks
             DefineGrid();
         }
 
-        private void DefineGrid() // from brick dimension
+        public override void DefineGrid() // from brick dimension
         {
             brickManager.FindGridArea(out float totalLength, out float totalHeight);
 
@@ -32,11 +31,16 @@ namespace BrickBreaker.Bricks
             int columns = CalculateColumns(totalLength, brickSize.x, out float leftoverSpaceX);
 
             // get starting point for parent transform
-            BrickSize brick = new BrickSize(brickSize.x, brickSize.y, brickOffsetX, brickOffsetY);
-            brickManager.SetParentPosition(brick, leftoverSpaceX, leftoverSpaceY);
+            BrickLayout brick = new BrickLayout(brickSize.x, brickSize.y, brickOffsetX, brickOffsetY);
+            brickManager.SetStartPosition(brick, leftoverSpaceX, leftoverSpaceY);
 
             // setup grid
-            brickManager.InitializeBrickGrid(brick, rows, columns, brickValue);
+            brickManager.InitializeBrickGrid(brick, rows, columns);
+        }
+
+        public override void PerformFunction()
+        {
+            brickManager.MoveBrickParentPosition();
         }
 
         // Calculate the number of columns that can fit in the box

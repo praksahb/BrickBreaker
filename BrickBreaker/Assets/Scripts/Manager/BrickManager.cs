@@ -8,13 +8,12 @@ namespace BrickBreaker.Bricks
         [SerializeField] private Transform brickPoolParent;
         [SerializeField] private Camera mainCamera;
 
-        private int maxRows;
-        private int maxColumns;
-
         private BrickServicePool brickPool;
-
-
         private BrickGrid brickGrid;
+
+        private Vector2 startPosition;
+        private float brickHeight;
+        private float offsetY;
 
         // function is called when action is invoked from brickController
         private void ReturnBrick(BrickController brick)
@@ -24,9 +23,10 @@ namespace BrickBreaker.Bricks
         }
 
         // create brick pool of totalBricks size
-        private void InitializePool(int brickVal, float brickWidth, float brickHeight)
+        private void InitializePool(float brickWidth, float brickHeight, int maxRows, int maxColumns)
         {
-            Bricks brick = new Bricks("Custom", brickPrefab, brickVal, brickWidth, brickHeight);
+            this.brickHeight = brickHeight;
+            Bricks brick = new Bricks("Custom", brickPrefab, brickWidth, brickHeight);
             int totalBricks = maxRows * maxColumns;
             brickPool = new BrickServicePool(totalBricks, brick, brickPoolParent);
         }
@@ -45,13 +45,25 @@ namespace BrickBreaker.Bricks
         }
 
         // creates brickGrid
-        public void InitializeBrickGrid(BrickSize brick, int maxRows, int maxColumns, int brickValue)
+        public void InitializeBrickGrid(BrickLayout brick, int maxRows, int maxColumns)
         {
-            InitializePool(brickValue, brick.brickWidth, brick.brickHeight);
+            InitializePool(brick.brickWidth, brick.brickHeight, maxRows, maxColumns);
 
             brickGrid = new BrickGrid(this, maxRows, maxColumns, brick);
         }
 
+        // move parent brick obj -1.25 (brickHeight + offsetY) in y-axis
+        public void MoveBrickParentPosition()
+        {
+            // storing as member variables currently till i can see how it can be called maybe from brickGenerator script as im not using singletons atm
+            float moveValue = brickHeight + offsetY;
+            brickPoolParent.transform.Translate(0, -moveValue, 0);
+
+            brickGrid.AddBrickRow(startPosition);
+
+        }
+
+        // test function
         public void CheckGridWorks()
         {
             brickGrid.GridTraversal();
@@ -67,7 +79,7 @@ namespace BrickBreaker.Bricks
         }
 
         // the parent obj - brickPool will be set at the top left corner
-        public void SetParentPosition(BrickSize brick, float leftoverSpaceX = 0, float leftoverSpaceY = 0)
+        public void SetStartPosition(BrickLayout brick, float leftoverSpaceX = 0, float leftoverSpaceY = 0)
         {
             // get top left corner point from camera
             Vector2 startPoint = mainCamera.ViewportToWorldPoint(new Vector2(0, 1));
@@ -78,23 +90,12 @@ namespace BrickBreaker.Bricks
             startPoint.x += totalSpaceX / 2 + brick.brickWidth / 2;
             startPoint.y -= totalSpaceY / 2 + brick.brickHeight / 2;
 
+            //store start point for use later in level 1
+            startPosition = startPoint;
+            Debug.Log("Start: " + startPosition);
+            offsetY = brick.brickOffsetY; // saving as variable for use in level 1
+
             brickPoolParent.position = startPoint;
-        }
-    }
-
-    public class BrickSize
-    {
-        public float brickWidth;
-        public float brickHeight;
-        public float brickOffsetX;
-        public float brickOffsetY;
-
-        public BrickSize(float brickWidth, float brickHeight, float brickOffsetX = 0, float brickOffsetY = 0)
-        {
-            this.brickWidth = brickWidth;
-            this.brickHeight = brickHeight;
-            this.brickOffsetX = brickOffsetX;
-            this.brickOffsetY = brickOffsetY;
         }
     }
 }
