@@ -1,3 +1,4 @@
+using BrickBreaker.Services;
 using UnityEngine;
 
 namespace BrickBreaker.Bricks
@@ -15,12 +16,7 @@ namespace BrickBreaker.Bricks
             brickManager = GetComponentInParent<BrickManager>();
         }
 
-        private void Start()
-        {
-            DefineGrid();
-        }
-
-        public override void DefineGrid() // from brick dimension
+        public override void DefineGrid(GameManager gameManager) // from brick dimension
         {
             brickManager.FindGridArea(out float totalLength, out float totalHeight);
 
@@ -35,7 +31,7 @@ namespace BrickBreaker.Bricks
             brickManager.SetStartPosition(brick, leftoverSpaceX, leftoverSpaceY);
 
             // setup grid
-            brickManager.InitializeBrickGrid(brick, rows, columns);
+            brickManager.InitializeBrickGrid(brick, rows, columns, gameManager);
         }
 
         public override void PerformFunction()

@@ -1,4 +1,5 @@
 ﻿using BrickBreaker.Ball;
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -24,6 +25,8 @@ namespace BrickBreaker.Services
             }
         }
 
+        public Action GameOver;
+
         private BoundaryManager boundaryManager;
         private AimLineController aimLineController;
         private BallServicePool ballServicePool;
@@ -32,6 +35,7 @@ namespace BrickBreaker.Services
         private bool isAiming;
         private int ballCount;
         private Vector2 newFirePosition;
+
 
         private void Awake()
         {
@@ -43,15 +47,12 @@ namespace BrickBreaker.Services
                 aimLineController.MainCamera = mainCamera;
             }
 
-            StartGame();
+            GameOver += StopGame;
         }
 
         private void Start()
         {
-            ballServicePool = new BallServicePool(ballPoolSize, ballSpeed, ballPrefab, firePoint.transform);
-            SetFirePoint();
-            boundaryManager.SetBoundaries();
-            aimLineController.SetLineValues(AimLineLength, maxReflections, lineOffset);
+            StartGame();
         }
 
         private void Update()
@@ -73,9 +74,26 @@ namespace BrickBreaker.Services
             }
         }
 
-        public void StartGame()
+        private void StartGame()
         {
+            InitializeGame();
             isAiming = true;
+        }
+
+        private void StopGame()
+        {
+            isAiming = false;
+            // load game over screen panel
+            Debug.Log("Game over.");
+        }
+
+        private void InitializeGame()
+        {
+            ballServicePool = new BallServicePool(ballPoolSize, ballSpeed, ballPrefab, firePoint.transform);
+            SetFirePoint();
+            boundaryManager.SetBoundaries();
+            aimLineController.SetLineValues(AimLineLength, maxReflections, lineOffset);
+            brickGenerator.DefineGrid(this);
         }
 
         private void SetFirePoint()

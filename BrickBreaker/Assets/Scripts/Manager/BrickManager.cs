@@ -1,3 +1,4 @@
+using BrickBreaker.Services;
 using UnityEngine;
 
 namespace BrickBreaker.Bricks
@@ -23,12 +24,12 @@ namespace BrickBreaker.Bricks
         }
 
         // create brick pool of totalBricks size
-        private void InitializePool(float brickWidth, float brickHeight, int maxRows, int maxColumns)
+        private void InitializePool(float brickWidth, float brickHeight, int maxRows, int maxColumns, GameManager gameManager)
         {
             this.brickHeight = brickHeight;
             Bricks brick = new Bricks("Custom", brickPrefab, brickWidth, brickHeight);
             int totalBricks = maxRows * maxColumns;
-            brickPool = new BrickServicePool(totalBricks, brick, brickPoolParent);
+            brickPool = new BrickServicePool(totalBricks, brick, brickPoolParent, gameManager);
         }
 
         // gets a brick from the pool
@@ -45,9 +46,9 @@ namespace BrickBreaker.Bricks
         }
 
         // creates brickGrid
-        public void InitializeBrickGrid(BrickLayout brick, int maxRows, int maxColumns)
+        public void InitializeBrickGrid(BrickLayout brick, int maxRows, int maxColumns, GameManager gameManager)
         {
-            InitializePool(brick.brickWidth, brick.brickHeight, maxRows, maxColumns);
+            InitializePool(brick.brickWidth, brick.brickHeight, maxRows, maxColumns, gameManager);
 
             brickGrid = new BrickGrid(this, maxRows, maxColumns, brick);
         }

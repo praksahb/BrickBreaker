@@ -43,5 +43,11 @@ namespace BrickBreaker.Bricks
         {
             transform.position = new Vector3(positionX, positionY, transform.position.z);
         }
+
+        private void OnTriggerEnter2D(Collider2D collision)
+        {
+            Debug.Log("Touched bottom.");
+            BrickController.GameManager.GameOver?.Invoke();
+        }
     }
 }

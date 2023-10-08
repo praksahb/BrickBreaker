@@ -133,7 +133,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1043901}
   - component: {fileID: 1043902}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: BrickPool
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -167,8 +167,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef84ec37179c1bf49bc5a3141b8e6a13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  brickOffsetX: 2
-  brickOffsetY: 2
+  brickOffsetX: 0.5
+  brickOffsetY: 0.5
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -408,7 +408,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1424576238}
   - component: {fileID: 1424576237}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: BrickManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}

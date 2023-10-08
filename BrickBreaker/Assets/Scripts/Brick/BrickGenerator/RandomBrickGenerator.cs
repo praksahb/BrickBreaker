@@ -1,3 +1,4 @@
+using BrickBreaker.Services;
 using UnityEngine;
 
 namespace BrickBreaker.Bricks
@@ -17,16 +18,11 @@ namespace BrickBreaker.Bricks
             brickManager = GetComponentInParent<BrickManager>();
         }
 
-        private void Start()
-        {
-            DefineGrid();
-            brickManager.CheckGridWorks();
-        }
 
         // Method 2. creating brick of fixed sizes from the desired rows and column values.
         // and feeding it to the brick initialization function to create the bricks of the specific sizes.
 
-        public override void DefineGrid() // from row, col values.
+        public override void DefineGrid(GameManager gameManager) // from row, col values.
         {
             // Get brick sizes
             brickManager.FindGridArea(out float totalWidth, out float totalHeight);
@@ -40,7 +36,7 @@ namespace BrickBreaker.Bricks
             brickManager.SetStartPosition(brick);
 
             // setup grid
-            brickManager.InitializeBrickGrid(brick, desiredRows, desiredColumns);
+            brickManager.InitializeBrickGrid(brick, desiredRows, desiredColumns, gameManager);
         }
 
         public override void PerformFunction()
