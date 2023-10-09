@@ -1081,8 +1081,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 519420031}
   ballPrefab: {fileID: -2775649247503592894, guid: 98a1c9097b3bd9644acd89aeb8f15ce9, type: 3}
-  firePoint: {fileID: 1646059455}
   brickGenerator: {fileID: 1043902}
+  brickManager: {fileID: 1424576237}
   gameOverPanel: {fileID: 1745551023}
   ballSpeed: 20
   ballPoolSize: 5
@@ -1724,6 +1724,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   restartBtn: {fileID: 1018944560}
   quitBtn: {fileID: 711327893}
+  scoreText: {fileID: 951646457}
 --- !u!1 &1954884710
 GameObject:
   m_ObjectHideFlags: 0

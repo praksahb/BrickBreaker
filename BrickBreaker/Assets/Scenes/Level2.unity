@@ -280,7 +280,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   desiredRows: 10
   desiredColumns: 10
-  brickVal: 6
 --- !u!1 &969848293
 GameObject:
   m_ObjectHideFlags: 0
@@ -327,9 +326,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 1392484743}
   ballPrefab: {fileID: -2775649247503592894, guid: 98a1c9097b3bd9644acd89aeb8f15ce9, type: 3}
+  firePoint: {fileID: 1961054447}
+  brickGenerator: {fileID: 889789828}
+  brickManager: {fileID: 1941245275}
+  gameOverPanel: {fileID: 0}
   ballSpeed: 20
   ballPoolSize: 100
-  firePoint: {fileID: 1961054447}
   AimLineLength: 50
   maxReflections: 2
   lineOffset: 0.01

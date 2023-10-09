@@ -1,4 +1,6 @@
+using BrickBreaker.Services;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -9,7 +11,9 @@ namespace BrickBreaker
     {
         [SerializeField] private Button restartBtn;
         [SerializeField] private Button quitBtn;
+        [SerializeField] private TextMeshProUGUI scoreText;
 
+        private GameManager gameManager;
 
         private Coroutine quitRoutine;
 
@@ -19,9 +23,25 @@ namespace BrickBreaker
             quitBtn.onClick.AddListener(QuitLevel);
         }
 
+        private void OnDisable()
+        {
+            restartBtn.onClick.RemoveAllListeners();
+            quitBtn.onClick.RemoveAllListeners();
+        }
+
+        public void SetGameManager(GameManager gameManager)
+        {
+            this.gameManager = gameManager;
+        }
+
+        public void SetScoreValue(int value)
+        {
+            scoreText.text = "Score: " + value.ToString();
+        }
+
         private void RestartLevel()
         {
-
+            gameManager.RestartGame?.Invoke();
         }
 
         private void QuitLevel()

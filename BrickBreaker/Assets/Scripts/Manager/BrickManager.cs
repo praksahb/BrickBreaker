@@ -9,20 +9,15 @@ namespace BrickBreaker.Bricks
         [SerializeField] private Transform brickPoolParent;
         [SerializeField] private Camera mainCamera;
 
+        private GameManager gameManager;
+
         private BrickServicePool brickPool;
         private BrickGrid brickGrid;
 
         private Vector2 startPosition;
 
-        // function is called when action is invoked from brickController
-        private void ReturnBrick(BrickController brick)
-        {
-            brick.ReturnBrick -= ReturnBrick;
-            brickPool.ReturnBrick(brick);
-        }
-
         // create brick pool of totalBricks size
-        private void InitializePool(float brickWidth, float brickHeight, int maxRows, int maxColumns, GameManager gameManager)
+        private void InitializePool(float brickWidth, float brickHeight, int maxRows, int maxColumns)
         {
             Bricks brick = new Bricks("Custom", brickPrefab, brickWidth, brickHeight);
             int totalBricks = maxRows * maxColumns;
@@ -45,9 +40,39 @@ namespace BrickBreaker.Bricks
         // creates brickGrid
         public void InitializeBrickGrid(BrickLayout brick, int maxRows, int maxColumns, GameManager gameManager)
         {
-            InitializePool(brick.brickWidth, brick.brickHeight, maxRows, maxColumns, gameManager);
-
+            this.gameManager = gameManager;
+            InitializePool(brick.brickWidth, brick.brickHeight, maxRows, maxColumns);
             brickGrid = new BrickGrid(this, maxRows, maxColumns, brick);
+            brickGrid.InitializeGrid();
+
+
+        }
+
+        // function is called when action is invoked from brickController
+        private void ReturnBrick(BrickController brick)
+        {
+            brick.ReturnBrick -= ReturnBrick;
+            brickPool.ReturnBrick(brick);
+        }
+
+        // action is invoked from gameOverPanel when restart button is clicked
+        public void SubscribeRestartLevel()
+        {
+            gameManager.RestartGame += ResetBrickGrid;
+        }
+
+        //  function is called once level is restarted
+        public void UnsubscribeRestartEvent()
+        {
+            gameManager.RestartGame -= ResetBrickGrid;
+        }
+
+        public void ResetBrickGrid()
+        {
+            brickPoolParent.position = startPosition;
+
+            brickGrid.ResetBrickGrid();
+
             brickGrid.InitializeGrid();
         }
 

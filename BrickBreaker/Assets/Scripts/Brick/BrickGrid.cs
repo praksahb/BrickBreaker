@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace BrickBreaker.Bricks
 {
@@ -13,6 +14,8 @@ namespace BrickBreaker.Bricks
         private int maxColumns;
         private BrickLayout brickLayout; // brick dimensions / brick configuration
 
+        private List<BrickController> usedBrickList;
+
         private int currentBrickVal;
 
         public BrickGrid(BrickManager brickManager, int maxRows, int maxColumns, BrickLayout brick)
@@ -21,6 +24,8 @@ namespace BrickBreaker.Bricks
             this.maxRows = maxRows;
             this.maxColumns = maxColumns;
             this.brickLayout = brick;
+
+            usedBrickList = new List<BrickController>();
 
             SetupGridPositions();
         }
@@ -63,6 +68,7 @@ namespace BrickBreaker.Bricks
 
                     brick.BrickView.SetPosition(new Vector2(xPosition, yPosition));
                     brickGrid[row, col] = brick;
+                    usedBrickList.Add(brick);
                 }
                 currentBrickVal--;
             }
@@ -85,8 +91,22 @@ namespace BrickBreaker.Bricks
                 brick.BrickModel.BrickValue = currentBrickVal;
                 brick.BrickView.SetBrickValue(brick.BrickModel.BrickValue);
                 brick.BrickView.SetWorldPosition(xPos, yPos);
+                usedBrickList.Add(brick);
             }
         }
+
+        // reset grid somehow call return brick function for each individual brick
+        public void ResetBrickGrid()
+        {
+            int length = usedBrickList.Count;
+            for (int i = 0; i < length; i++)
+            {
+                BrickController brick = usedBrickList[i];
+                brick.ReturnBrick?.Invoke(brick);
+            }
+            usedBrickList.Clear();
+        }
+
 
         // Level 2
 
