@@ -860,7 +860,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1018944558
 GameObject:
@@ -1015,7 +1015,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   brickPrefab: {fileID: 2656544010723799990, guid: 3d2945ebe09f3214189da6b82f6f5857, type: 3}
   brickPoolParent: {fileID: 1043901}
-  mainCamera: {fileID: 519420031}
 --- !u!4 &1424576238
 Transform:
   m_ObjectHideFlags: 0
@@ -1029,7 +1028,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1043901}
-  - {fileID: 1606744110}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1081,7 +1079,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 519420031}
   ballPrefab: {fileID: -2775649247503592894, guid: 98a1c9097b3bd9644acd89aeb8f15ce9, type: 3}
-  brickGenerator: {fileID: 1043902}
   brickManager: {fileID: 1424576237}
   gameOverPanel: {fileID: 1745551023}
   ballSpeed: 20
@@ -1135,8 +1132,8 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1745551019}
-  m_Father: {fileID: 1424576238}
-  m_RootOrder: 1
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}

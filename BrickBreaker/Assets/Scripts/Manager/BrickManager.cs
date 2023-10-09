@@ -7,21 +7,63 @@ namespace BrickBreaker.Bricks
     {
         [SerializeField] private BrickView brickPrefab;
         [SerializeField] private Transform brickPoolParent;
-        [SerializeField] private Camera mainCamera;
 
-        private GameManager gameManager;
+        public GameManager GameManager { get; set; }
+        public Camera MainCamera { private get; set; }
 
         private BrickServicePool brickPool;
         private BrickGrid brickGrid;
 
         private Vector2 startPosition;
 
+        private IBrickGenerator brickGenerator;
+
+
+        private void Awake()
+        {
+            brickGenerator = GetComponentInChildren<IBrickGenerator>();
+        }
+
         // create brick pool of totalBricks size
         private void InitializePool(float brickWidth, float brickHeight, int maxRows, int maxColumns)
         {
             Bricks brick = new Bricks("Custom", brickPrefab, brickWidth, brickHeight);
             int totalBricks = maxRows * maxColumns;
-            brickPool = new BrickServicePool(totalBricks, brick, brickPoolParent, gameManager);
+            brickPool = new BrickServicePool(totalBricks, brick, brickPoolParent, GameManager);
+        }
+        // creates brickGrid
+        public void InitializeBrickGrid(BrickLayout brick, int maxRows, int maxColumns)
+        {
+            InitializePool(brick.brickWidth, brick.brickHeight, maxRows, maxColumns);
+            brickGrid = new BrickGrid(this, maxRows, maxColumns, brick);
+            brickGrid.InitializeGrid();
+        }
+
+        // perform function 1 
+        public void LoadGrid()
+        {
+            if (brickGenerator != null)
+            {
+                brickGenerator.DefineGrid();
+            }
+        }
+
+        // perform function 2 - after all balls returned
+        public void TurnEffect()
+        {
+            if (brickGenerator != null)
+            {
+                brickGenerator.PerformFunction();
+            }
+        }
+
+        public void ResetBrickGrid()
+        {
+            brickPoolParent.position = startPosition;
+
+            brickGrid.ResetBrickGrid();
+
+            brickGrid.InitializeGrid();
         }
 
         // gets a brick from the pool
@@ -32,20 +74,10 @@ namespace BrickBreaker.Bricks
             return brick;
         }
 
+        // get brick w * h from prefab
         public Vector2 GetBrickSize()
         {
             return new Vector2(brickPrefab.transform.localScale.x, brickPrefab.transform.localScale.y);
-        }
-
-        // creates brickGrid
-        public void InitializeBrickGrid(BrickLayout brick, int maxRows, int maxColumns, GameManager gameManager)
-        {
-            this.gameManager = gameManager;
-            InitializePool(brick.brickWidth, brick.brickHeight, maxRows, maxColumns);
-            brickGrid = new BrickGrid(this, maxRows, maxColumns, brick);
-            brickGrid.InitializeGrid();
-
-
         }
 
         // function is called when action is invoked from brickController
@@ -58,22 +90,13 @@ namespace BrickBreaker.Bricks
         // action is invoked from gameOverPanel when restart button is clicked
         public void SubscribeRestartLevel()
         {
-            gameManager.RestartGame += ResetBrickGrid;
+            GameManager.RestartGame += ResetBrickGrid;
         }
 
         //  function is called once level is restarted
         public void UnsubscribeRestartEvent()
         {
-            gameManager.RestartGame -= ResetBrickGrid;
-        }
-
-        public void ResetBrickGrid()
-        {
-            brickPoolParent.position = startPosition;
-
-            brickGrid.ResetBrickGrid();
-
-            brickGrid.InitializeGrid();
+            GameManager.RestartGame -= ResetBrickGrid;
         }
 
         // move parent brick obj -1.25 (brickHeight + offsetY) in y-axis
@@ -87,26 +110,20 @@ namespace BrickBreaker.Bricks
 
         }
 
-        // test function
-        public void CheckGridWorks()
-        {
-            brickGrid.GridTraversal();
-        }
-
         // Helpers for defining the size of the grid(rows and column values) from the screen size
 
         // Calculate the length and height of top half of screen space
         public void FindGridArea(out float boxWidth, out float boxHeight)
         {
-            boxHeight = mainCamera.orthographicSize;
-            boxWidth = boxHeight * 2f * mainCamera.aspect;
+            boxHeight = MainCamera.orthographicSize;
+            boxWidth = boxHeight * 2f * MainCamera.aspect;
         }
 
         // the parent obj - brickPool will be set at the top left corner
         public void SetStartPosition(BrickLayout brick, float leftoverSpaceX = 0, float leftoverSpaceY = 0)
         {
             // get top left corner point from camera
-            Vector2 startPoint = mainCamera.ViewportToWorldPoint(new Vector2(0, 1));
+            Vector2 startPoint = MainCamera.ViewportToWorldPoint(new Vector2(0, 1));
             // center the grid columns to be equi-distant from both ends
             float totalSpaceX = leftoverSpaceX + brick.brickOffsetX;
             float totalSpaceY = leftoverSpaceY + brick.brickOffsetY;

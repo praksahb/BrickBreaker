@@ -1,10 +1,9 @@
-using BrickBreaker.Services;
 using UnityEngine;
 
 namespace BrickBreaker.Bricks
 {
     // Generate square bricks with offset - used in level 1
-    public class BrickGenerator : IBrickGenerator
+    public class BrickGenerator : MonoBehaviour, IBrickGenerator
     {
         [SerializeField] private float brickOffsetX;
         [SerializeField] private float brickOffsetY;
@@ -17,7 +16,7 @@ namespace BrickBreaker.Bricks
             brickManager = GetComponentInParent<BrickManager>();
         }
 
-        public override void DefineGrid(GameManager gameManager) // from brick dimension
+        public void DefineGrid() // from brick dimension
         {
             brickManager.FindGridArea(out float totalLength, out float totalHeight);
 
@@ -32,13 +31,13 @@ namespace BrickBreaker.Bricks
             brickManager.SetStartPosition(brick, leftoverSpaceX, leftoverSpaceY);
 
             // setup grid
-            brickManager.InitializeBrickGrid(brick, rows, columns, gameManager);
+            brickManager.InitializeBrickGrid(brick, rows, columns);
 
             // store brick height value for later
             brickHeight = brickSize.y;
         }
 
-        public override void PerformFunction()
+        public void PerformFunction()
         {
             brickManager.MoveBrickParentPosition(brickHeight, brickOffsetY);
         }

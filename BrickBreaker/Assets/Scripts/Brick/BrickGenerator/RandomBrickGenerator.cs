@@ -1,10 +1,9 @@
-using BrickBreaker.Services;
 using UnityEngine;
 
 namespace BrickBreaker.Bricks
 
 {
-    public class RandomBrickGenerator : IBrickGenerator
+    public class RandomBrickGenerator : MonoBehaviour, IBrickGenerator
     {
         [SerializeField] private int desiredRows;
         [SerializeField] private int desiredColumns;
@@ -22,7 +21,7 @@ namespace BrickBreaker.Bricks
         // Method 2. creating brick of fixed sizes from the desired rows and column values.
         // and feeding it to the brick initialization function to create the bricks of the specific sizes.
 
-        public override void DefineGrid(GameManager gameManager) // from row, col values.
+        public void DefineGrid() // from row, col values.
         {
             // Get brick sizes
             brickManager.FindGridArea(out float totalWidth, out float totalHeight);
@@ -36,10 +35,10 @@ namespace BrickBreaker.Bricks
             brickManager.SetStartPosition(brick);
 
             // setup grid
-            brickManager.InitializeBrickGrid(brick, desiredRows, desiredColumns, gameManager);
+            brickManager.InitializeBrickGrid(brick, desiredRows, desiredColumns);
         }
 
-        public override void PerformFunction()
+        public void PerformFunction()
         {
             // To be created, randomize bricks after all balls have returned..
         }
