@@ -1,4 +1,5 @@
 ﻿using BrickBreaker.Ball;
+using BrickBreaker.Bricks;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -9,8 +10,9 @@ namespace BrickBreaker.Services
     {
         [SerializeField] private Camera mainCamera;
         [SerializeField] private BallView ballPrefab;
-        [SerializeField] private Transform firePoint;
         [SerializeField] private IBrickGenerator brickGenerator;
+        [SerializeField] private BrickManager brickManager;
+        [SerializeField] private GameOverPanel gameOverPanel;
         [SerializeField] private int ballSpeed;
         [SerializeField] private int ballPoolSize;
         [SerializeField] private float AimLineLength;
@@ -26,47 +28,52 @@ namespace BrickBreaker.Services
         }
 
         public Action GameOver;
+        public Action RestartGame;
 
+        private AimLineController firePoint;
         private BoundaryManager boundaryManager;
-        private AimLineController aimLineController;
         private BallServicePool ballServicePool;
         private Coroutine LaunchBallCoroutine;
 
         private bool isAiming;
         private int ballCount;
+        private int scoreCount;
         private Vector2 newFirePosition;
-
 
         private void Awake()
         {
-            boundaryManager = GetComponent<BoundaryManager>();
-            aimLineController = firePoint.GetComponent<AimLineController>();
-            if (boundaryManager && aimLineController)
-            {
-                boundaryManager.MainCamera = mainCamera;
-                aimLineController.MainCamera = mainCamera;
-            }
+            InitializeReference();
+        }
 
+        private void OnEnable()
+        {
             GameOver += StopGame;
+            RestartGame += ReinitializeLevel;
+        }
+
+        private void OnDisable()
+        {
+            GameOver -= StopGame;
+            RestartGame -= ReinitializeLevel;
         }
 
         private void Start()
         {
-            StartGame();
+            InitializeGame();
         }
 
         private void Update()
         {
             if (isAiming)
             {
-                aimLineController.LineRenderer.enabled = true;
-                aimLineController.Aim();
-                aimLineController.DrawReflectedTrajectory();
+                firePoint.LineRenderer.enabled = true;
+                firePoint.Aim();
+                firePoint.DrawReflectedTrajectory();
             }
 
             if (Input.GetMouseButtonDown(0) && isAiming)
             {
-                aimLineController.LineRenderer.enabled = false;
+                firePoint.LineRenderer.enabled = false;
                 isAiming = false;
                 Vector2 launchPosition = firePoint.transform.up;
 
@@ -74,25 +81,50 @@ namespace BrickBreaker.Services
             }
         }
 
-        private void StartGame()
+        private void InitializeReference()
         {
-            InitializeGame();
+            boundaryManager = GetComponent<BoundaryManager>();
+            firePoint = GetComponentInChildren<AimLineController>();
+            if (boundaryManager && firePoint)
+            {
+                boundaryManager.MainCamera = mainCamera;
+                firePoint.MainCamera = mainCamera;
+            }
+        }
+
+        private void InitializeGame()
+        {
+            gameOverPanel.gameObject.SetActive(false);
+            InitializeLevel();
             isAiming = true;
+            scoreCount = 0;
         }
 
         private void StopGame()
         {
             isAiming = false;
             // load game over screen panel
-            Debug.Log("Game over.");
+            gameOverPanel.SetScoreValue(scoreCount);
+            gameOverPanel.gameObject.SetActive(true);
+            brickManager.SubscribeRestartLevel();
+            scoreCount = 0;
         }
 
-        private void InitializeGame()
+        private void ReinitializeLevel()
+        {
+            isAiming = true;
+            gameOverPanel.gameObject.SetActive(false);
+            brickManager.UnsubscribeRestartEvent();
+            SetFirePoint();
+        }
+
+        private void InitializeLevel()
         {
             ballServicePool = new BallServicePool(ballPoolSize, ballSpeed, ballPrefab, firePoint.transform);
             SetFirePoint();
             boundaryManager.SetBoundaries();
-            aimLineController.SetLineValues(AimLineLength, maxReflections, lineOffset);
+            firePoint.SetLineValues(AimLineLength, maxReflections, lineOffset);
+            gameOverPanel.SetGameManager(this);
             brickGenerator.DefineGrid(this);
         }
 
@@ -144,6 +176,7 @@ namespace BrickBreaker.Services
                 brickGenerator.PerformFunction();
                 firePoint.transform.position = newFirePosition;
                 isAiming = true;
+                scoreCount++;
             }
 
         }
