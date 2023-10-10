@@ -171,7 +171,8 @@ namespace BrickBreaker.Bricks
             return row >= 0 && row < maxRows && col >= 0 && col < maxColumns;
         }
 
-        // traverse grid each cells  - change brickModel values for now
+        // traverse grid each cells  -
+        // - 1. Initialize BrickValues according to count of neighbours
         public void GridTraversal()
         {
             for (int row = 0; row < maxRows; row++)
