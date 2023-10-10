@@ -7,6 +7,7 @@ namespace BrickBreaker.Bricks
     {
         [SerializeField] private int desiredRows;
         [SerializeField] private int desiredColumns;
+        [SerializeField] private PlayLevel currentLevel;
 
         private BrickManager brickManager;
         private float brickWidth;
@@ -35,7 +36,7 @@ namespace BrickBreaker.Bricks
             brickManager.SetStartPosition(brick);
 
             // setup grid
-            brickManager.InitializeBrickGrid(brick, desiredRows, desiredColumns);
+            brickManager.InitializeBrickGrid(brick, desiredRows, desiredColumns, currentLevel);
         }
 
         public void PerformFunction()

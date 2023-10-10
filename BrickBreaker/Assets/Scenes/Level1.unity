@@ -169,6 +169,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   brickOffsetX: 0.5
   brickOffsetY: 0.5
+  currentLevel: 1
 --- !u!1 &126094538
 GameObject:
   m_ObjectHideFlags: 0

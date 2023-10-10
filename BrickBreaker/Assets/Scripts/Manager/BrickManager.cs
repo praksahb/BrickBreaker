@@ -32,29 +32,23 @@ namespace BrickBreaker.Bricks
             brickPool = new BrickServicePool(totalBricks, brick, brickPoolParent, GameManager);
         }
         // creates brickGrid
-        public void InitializeBrickGrid(BrickLayout brick, int maxRows, int maxColumns)
+        public void InitializeBrickGrid(BrickLayout brick, int maxRows, int maxColumns, PlayLevel currentLevel)
         {
             InitializePool(brick.brickWidth, brick.brickHeight, maxRows, maxColumns);
-            brickGrid = new BrickGrid(this, maxRows, maxColumns, brick);
+            brickGrid = new BrickGrid(this, maxRows, maxColumns, brick, currentLevel);
             brickGrid.InitializeGrid();
         }
 
         // perform function 1 
         public void LoadGrid()
         {
-            if (brickGenerator != null)
-            {
-                brickGenerator.DefineGrid();
-            }
+            brickGenerator?.DefineGrid();
         }
 
         // perform function 2 - after all balls returned
         public void TurnEffect()
         {
-            if (brickGenerator != null)
-            {
-                brickGenerator.PerformFunction();
-            }
+            brickGenerator?.PerformFunction();
         }
 
         public void ResetBrickGrid()

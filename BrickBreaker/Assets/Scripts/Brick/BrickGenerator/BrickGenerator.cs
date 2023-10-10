@@ -7,6 +7,7 @@ namespace BrickBreaker.Bricks
     {
         [SerializeField] private float brickOffsetX;
         [SerializeField] private float brickOffsetY;
+        [SerializeField] private PlayLevel currentLevel;
 
         private BrickManager brickManager;
         private float brickHeight;
@@ -31,7 +32,7 @@ namespace BrickBreaker.Bricks
             brickManager.SetStartPosition(brick, leftoverSpaceX, leftoverSpaceY);
 
             // setup grid
-            brickManager.InitializeBrickGrid(brick, rows, columns);
+            brickManager.InitializeBrickGrid(brick, rows, columns, currentLevel);
 
             // store brick height value for later
             brickHeight = brickSize.y;
