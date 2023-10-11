@@ -840,11 +840,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8766ab0a265941a4a8171800f4155aff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  desiredRows: 10
-  desiredColumns: 30
+  desiredRows: 40
+  desiredColumns: 80
   currentLevel: 2
-  scaleValue: 10
-  threshold: 1
+  scaleValue: 0.5
+  threshold: 0.5
+  timer: 0.5
 --- !u!1 &969848293
 GameObject:
   m_ObjectHideFlags: 0

@@ -22,11 +22,26 @@ namespace BrickBreaker.Bricks
             brickManager = GetComponentInParent<BrickManager>();
         }
 
+        [SerializeField] private float timer;
+        private float timerVal;
+
+        private void Start()
+        {
+            timerVal = timer;
+        }
+
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.A))
             {
                 brickManager.ResetGrid(scaleValue, threshold);
+            }
+
+            timer -= Time.deltaTime;
+            if (timer <= 0.0f)
+            {
+                brickManager.TestGOF();
+                timer = timerVal;
             }
         }
 

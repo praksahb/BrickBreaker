@@ -98,6 +98,18 @@ namespace BrickBreaker.Bricks
             }
         }
 
+        // reset grid - return brick function for each individual brick
+        public void ResetBrickGrid()
+        {
+            int length = usedBrickList.Count;
+            for (int i = 0; i < length; i++)
+            {
+                BrickController brick = usedBrickList[i];
+                brick.ReturnBrick?.Invoke(brick);
+            }
+            usedBrickList.Clear();
+        }
+
         // Level 1
 
         private void NormalArrangement()
@@ -143,19 +155,6 @@ namespace BrickBreaker.Bricks
             }
         }
 
-        // reset grid - return brick function for each individual brick
-        public void ResetBrickGrid()
-        {
-            int length = usedBrickList.Count;
-            for (int i = 0; i < length; i++)
-            {
-                BrickController brick = usedBrickList[i];
-                brick.ReturnBrick?.Invoke(brick);
-            }
-            usedBrickList.Clear();
-        }
-
-
         // Level 2
 
         // generate random initial states of brick in grid
@@ -188,6 +187,60 @@ namespace BrickBreaker.Bricks
                     brick.BrickModel.NextState = CalculateBrickState(row, col);
                 }
             }
+        }
+
+        // Conway's game of life - 3 Rules
+        public void ImplementGOL()
+        {
+            for (int row = 0; row < maxRows; row++)
+            {
+                for (int col = 0; col < maxColumns; col++)
+                {
+                    BrickController brick = brickGrid[row, col];
+
+                    //// Rule 1
+                    if (brick.BrickModel.CurrentState != BrickState.Active && brick.BrickModel.BrickValue == 3)
+                    {
+                        brick.BrickModel.NextState = BrickState.Active;
+                    }
+
+                    //// Rule 2 & 3
+                    //if (brick.BrickModel.CurrentState == BrickState.Active)
+                    //{
+                    //    if (brick.BrickModel.BrickValue < 2 || brick.BrickModel.BrickValue > 3)
+                    //    {
+                    //        brick.BrickModel.NextState = BrickState.Inactive;
+                    //    }
+                    //    else
+                    //    {
+                    //        brick.BrickModel.NextState = BrickState.Active;
+                    //    }
+                    //}
+
+                    // Rule 2
+                    else if (brick.BrickModel.CurrentState == BrickState.Active)
+                    {
+                        if (brick.BrickModel.BrickValue == 2 || brick.BrickModel.BrickValue == 3)
+                        {
+                            brick.BrickModel.NextState = BrickState.Active;
+                        }
+                        else
+                        {
+                            brick.BrickModel.NextState = BrickState.Inactive;
+                        }
+                    }
+
+                    // Rule 3
+                    else
+                    {
+                        brick.BrickModel.NextState = BrickState.Inactive;
+                    }
+                }
+            }
+
+            UpdateBrickState();
+
+            UpdateBrickValue();
         }
 
         private void UpdateBrickState()
@@ -227,7 +280,7 @@ namespace BrickBreaker.Bricks
 
         // traverse grid each cells  -
         // - 1. Initialize BrickValues according to count of neighbours
-        public void UpdateBrickValue()
+        private void UpdateBrickValue()
         {
             for (int row = 0; row < maxRows; row++)
             {
@@ -236,20 +289,18 @@ namespace BrickBreaker.Bricks
                     // Cell - brick
                     BrickController brick = brickGrid[row, col];
 
-                    // 1. can check if brick is active or not, by storing bool value in its model
-                    if (brick.BrickModel.CurrentState == BrickState.Active)
-                    {
-                        // 2. can check active status of neighbours
-                        //Get count of neighbours
-                        int count = CheckNeighbours(row, col);
-                        brick.BrickModel.BrickValue = count;
-                        brick.BrickView.SetBrickValue(count);
-                    }
+                    // updating brickValue for each cell/brick
+                    // 2. can check active status of neighbours
+                    //Get count of neighbours
+                    int count = NeighbourCount(row, col);
+                    brick.BrickModel.BrickValue = count;
+                    brick.BrickView.SetBrickValue(count);
+
                 }
             }
         }
 
-        public int CheckNeighbours(int row, int col)
+        private int NeighbourCount(int row, int col)
         {
             int len = neighbourX.Length;
             int count = 0;
