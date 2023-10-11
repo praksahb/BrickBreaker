@@ -8,6 +8,10 @@ namespace BrickBreaker.Bricks
         [SerializeField] private int desiredRows;
         [SerializeField] private int desiredColumns;
         [SerializeField] private PlayLevel currentLevel;
+        [Range(0.0f, 1.0f)]
+        [SerializeField] private float scaleValue;
+        [Range(0.0f, 1.0f)]
+        [SerializeField] private float threshold;
 
         private BrickManager brickManager;
         private float brickWidth;
@@ -16,6 +20,14 @@ namespace BrickBreaker.Bricks
         private void Awake()
         {
             brickManager = GetComponentInParent<BrickManager>();
+        }
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.A))
+            {
+                brickManager.ResetGrid(scaleValue, threshold);
+            }
         }
 
 
@@ -36,7 +48,7 @@ namespace BrickBreaker.Bricks
             brickManager.SetStartPosition(brick);
 
             // setup grid
-            brickManager.InitializeBrickGrid(brick, desiredRows, desiredColumns, currentLevel);
+            brickManager.InitializeBricks(brick, desiredRows, desiredColumns, currentLevel, scaleValue, threshold);
         }
 
         public void PerformFunction()

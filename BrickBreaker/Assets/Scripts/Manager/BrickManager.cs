@@ -31,12 +31,20 @@ namespace BrickBreaker.Bricks
             int totalBricks = maxRows * maxColumns;
             brickPool = new BrickServicePool(totalBricks, brick, brickPoolParent, GameManager);
         }
-        // creates brickGrid
-        public void InitializeBrickGrid(BrickLayout brick, int maxRows, int maxColumns, PlayLevel currentLevel)
+        // creates brickGrid level 1
+        public void InitializeBricks(BrickLayout brick, int maxRows, int maxColumns, PlayLevel currentLevel)
         {
             InitializePool(brick.brickWidth, brick.brickHeight, maxRows, maxColumns);
             brickGrid = new BrickGrid(this, maxRows, maxColumns, brick, currentLevel);
-            brickGrid.InitializeGrid();
+        }
+
+        // create brickGrid for level 2
+        public void InitializeBricks(BrickLayout brick, int maxRows, int maxColumns, PlayLevel currentLevel, float scaleValue, float thresholdValue)
+        {
+            // create object pool of bricks
+            InitializePool(brick.brickWidth, brick.brickHeight, maxRows, maxColumns);
+            // create brickGrid, having 2d arrays for bricks, positions 
+            brickGrid = new BrickGrid(this, maxRows, maxColumns, brick, currentLevel, scaleValue, thresholdValue);
         }
 
         // perform function 1 
@@ -57,6 +65,14 @@ namespace BrickBreaker.Bricks
 
             brickGrid.ResetBrickGrid();
 
+            brickGrid.InitializeGrid();
+        }
+
+        // test function for perlin noise generation
+        public void ResetGrid(float v1, float v2)
+        {
+            brickGrid.ResetBrickGrid();
+            brickGrid.SetVal(v1, v2);
             brickGrid.InitializeGrid();
         }
 

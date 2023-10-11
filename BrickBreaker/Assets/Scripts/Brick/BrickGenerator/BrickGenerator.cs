@@ -32,7 +32,7 @@ namespace BrickBreaker.Bricks
             brickManager.SetStartPosition(brick, leftoverSpaceX, leftoverSpaceY);
 
             // setup grid
-            brickManager.InitializeBrickGrid(brick, rows, columns, currentLevel);
+            brickManager.InitializeBricks(brick, rows, columns, currentLevel);
 
             // store brick height value for later
             brickHeight = brickSize.y;

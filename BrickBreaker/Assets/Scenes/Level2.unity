@@ -843,6 +843,8 @@ MonoBehaviour:
   desiredRows: 10
   desiredColumns: 30
   currentLevel: 2
+  scaleValue: 10
+  threshold: 1
 --- !u!1 &969848293
 GameObject:
   m_ObjectHideFlags: 0
