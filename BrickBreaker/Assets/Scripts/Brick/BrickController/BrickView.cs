@@ -5,13 +5,23 @@ namespace BrickBreaker.Bricks
 {
     public class BrickView : MonoBehaviour, IBrickBreak
     {
+        // renderer refs
+        //[SerializeField] private SpriteRenderer brickRenderer;
+        //[SerializeField] private MeshRenderer brickValRenderer;
+        //[SerializeField] private BoxCollider2D boxCollider;
+
+
         public BrickController BrickController { get; set; }
 
         private BrickValueCounter brickValueCounter; // ui script for changing value of brick
 
+
         private void Awake()
         {
             brickValueCounter = GetComponentInChildren<BrickValueCounter>();
+            //brickRenderer = GetComponent<SpriteRenderer>();
+            //brickValRenderer = brickValueCounter.GetComponent<MeshRenderer>();
+            //boxCollider = GetComponent<BoxCollider2D>();
         }
 
         public void SetBrickValue(int value)
@@ -26,6 +36,10 @@ namespace BrickBreaker.Bricks
 
         public void SetBrickActive(bool val)
         {
+            //brickRenderer.enabled = val;
+            //brickValRenderer.enabled = val;
+            //boxCollider.enabled = val;
+
             gameObject.SetActive(val);
         }
 

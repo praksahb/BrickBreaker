@@ -76,12 +76,6 @@ namespace BrickBreaker.Bricks
             brickGrid.InitializeGrid();
         }
 
-        // test function for game of life simulation
-        public void TestGOF()
-        {
-            brickGrid.ImplementGOL();
-        }
-
         // gets a brick from the pool
         public BrickController GetBrick()
         {
@@ -123,6 +117,10 @@ namespace BrickBreaker.Bricks
             brickPoolParent.transform.Translate(0, -moveValue, 0);
 
             brickGrid.AddBrickRow(startPosition);
+        }        // test function for game of life simulation
+        public void TestGOF()
+        {
+            brickGrid.ImplementGOL();
         }
 
         // Helpers for defining the size of the grid(rows and column values) from the screen size

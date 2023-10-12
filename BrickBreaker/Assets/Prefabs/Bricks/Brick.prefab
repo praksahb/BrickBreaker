@@ -316,3 +316,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 267410a64dc752948ad32f446c34ed48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  brickRenderer: {fileID: 8756473027068008026}
+  brickValRenderer: {fileID: 4399088174614608923}
+  boxCollider: {fileID: 8756473027051589578}

@@ -22,6 +22,7 @@ namespace BrickBreaker.Bricks
             brickManager = GetComponentInParent<BrickManager>();
         }
 
+        // test variables -
         [SerializeField] private float timer;
         private float timerVal;
 
@@ -44,7 +45,7 @@ namespace BrickBreaker.Bricks
                 timer = timerVal;
             }
         }
-
+        // till here- testing randomization
 
         // Method 2. creating brick of fixed sizes from the desired rows and column values.
         // and feeding it to the brick initialization function to create the bricks of the specific sizes.
@@ -69,6 +70,7 @@ namespace BrickBreaker.Bricks
         public void PerformFunction()
         {
             // To be created, randomize bricks after all balls have returned..
+            brickManager.TestGOF();
         }
     }
 }

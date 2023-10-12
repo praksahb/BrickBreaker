@@ -840,8 +840,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8766ab0a265941a4a8171800f4155aff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  desiredRows: 40
-  desiredColumns: 80
+  desiredRows: 10
+  desiredColumns: 30
   currentLevel: 2
   scaleValue: 0.5
   threshold: 0.5

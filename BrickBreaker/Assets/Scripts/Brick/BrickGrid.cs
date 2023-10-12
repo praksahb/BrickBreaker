@@ -204,19 +204,6 @@ namespace BrickBreaker.Bricks
                         brick.BrickModel.NextState = BrickState.Active;
                     }
 
-                    //// Rule 2 & 3
-                    //if (brick.BrickModel.CurrentState == BrickState.Active)
-                    //{
-                    //    if (brick.BrickModel.BrickValue < 2 || brick.BrickModel.BrickValue > 3)
-                    //    {
-                    //        brick.BrickModel.NextState = BrickState.Inactive;
-                    //    }
-                    //    else
-                    //    {
-                    //        brick.BrickModel.NextState = BrickState.Active;
-                    //    }
-                    //}
-
                     // Rule 2
                     else if (brick.BrickModel.CurrentState == BrickState.Active)
                     {
