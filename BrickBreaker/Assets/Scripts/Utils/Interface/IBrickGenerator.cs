@@ -1,11 +1,8 @@
-﻿using BrickBreaker.Services;
-using UnityEngine;
-
-namespace BrickBreaker
+﻿namespace BrickBreaker
 {
-    public abstract class IBrickGenerator : MonoBehaviour
+    public interface IBrickGenerator
     {
-        public abstract void DefineGrid(GameManager gameManager);
-        public abstract void PerformFunction();
+        public void DefineGrid();
+        public void PerformFunction();
     }
 }

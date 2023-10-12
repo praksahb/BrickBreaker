@@ -1,13 +1,17 @@
-using BrickBreaker.Services;
 using UnityEngine;
 
 namespace BrickBreaker.Bricks
 
 {
-    public class RandomBrickGenerator : IBrickGenerator
+    public class RandomBrickGenerator : MonoBehaviour, IBrickGenerator
     {
         [SerializeField] private int desiredRows;
         [SerializeField] private int desiredColumns;
+        [SerializeField] private PlayLevel currentLevel;
+        [Range(0.0f, 1.0f)]
+        [SerializeField] private float scaleValue;
+        [Range(0.0f, 1.0f)]
+        [SerializeField] private float threshold;
 
         private BrickManager brickManager;
         private float brickWidth;
@@ -18,11 +22,34 @@ namespace BrickBreaker.Bricks
             brickManager = GetComponentInParent<BrickManager>();
         }
 
+        [SerializeField] private float timer;
+        private float timerVal;
+
+        private void Start()
+        {
+            timerVal = timer;
+        }
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.A))
+            {
+                brickManager.ResetGrid(scaleValue, threshold);
+            }
+
+            timer -= Time.deltaTime;
+            if (timer <= 0.0f)
+            {
+                brickManager.TestGOF();
+                timer = timerVal;
+            }
+        }
+
 
         // Method 2. creating brick of fixed sizes from the desired rows and column values.
         // and feeding it to the brick initialization function to create the bricks of the specific sizes.
 
-        public override void DefineGrid(GameManager gameManager) // from row, col values.
+        public void DefineGrid() // from row, col values.
         {
             // Get brick sizes
             brickManager.FindGridArea(out float totalWidth, out float totalHeight);
@@ -36,10 +63,10 @@ namespace BrickBreaker.Bricks
             brickManager.SetStartPosition(brick);
 
             // setup grid
-            brickManager.InitializeBrickGrid(brick, desiredRows, desiredColumns, gameManager);
+            brickManager.InitializeBricks(brick, desiredRows, desiredColumns, currentLevel, scaleValue, threshold);
         }
 
-        public override void PerformFunction()
+        public void PerformFunction()
         {
             // To be created, randomize bricks after all balls have returned..
         }

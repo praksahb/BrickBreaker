@@ -46,7 +46,6 @@ namespace BrickBreaker.Bricks
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            Debug.Log("Touched bottom.");
             BrickController.GameManager.GameOver?.Invoke();
         }
     }
