@@ -172,7 +172,7 @@ namespace BrickBreaker.Bricks
 
         public void RandomizeAfterTurn()
         {
-            RegenerateBricks2();
+            RegenerateBricks();
             UpdateBrickState();
             UpdateBrickValue();
             Debug.Log("active_bricks: " + activeBricks);
