@@ -8,7 +8,7 @@ namespace BrickBreaker.Bricks
 
         public void SetValue(int value)
         {
-            brickValue.text = value.ToString();
+            brickValue.SetText(value.ToString());
         }
     }
 }

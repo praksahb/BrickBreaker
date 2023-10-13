@@ -114,6 +114,7 @@ namespace BrickBreaker.Services
         // called if bricks reach bottom of screen
         private void StopGame()
         {
+            Debug.Log("chk2");
             isAiming = false;
             // load game over screen panel
             gameOverPanel.SetScoreValue(scoreCount);
@@ -176,10 +177,10 @@ namespace BrickBreaker.Services
             ballCount++;
             if (ballCount == ballPoolSize)
             {
-                brickManager.TurnEffect();
                 firePoint.transform.position = newFirePosition;
                 isAiming = true;
                 scoreCount++;
+                brickManager.TurnEffect();
             }
 
         }

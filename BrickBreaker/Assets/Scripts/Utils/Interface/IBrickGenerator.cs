@@ -3,6 +3,6 @@
     public interface IBrickGenerator
     {
         public void DefineGrid();
-        public void PerformFunction();
+        public void ModifyGrid();
     }
 }

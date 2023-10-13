@@ -14,7 +14,9 @@ namespace BrickBreaker.Bricks
         private int maxColumns;
         private BrickLayout brickLayout; // brick dimensions / brick configuration
 
-        private List<BrickController> usedBrickList;
+        private int totalBricks;
+        private int activeBricks;
+        private List<BrickController> usedBricks;
         private PlayLevel currentLevel;
         private int currentBrickVal;
 
@@ -41,7 +43,7 @@ namespace BrickBreaker.Bricks
             this.brickLayout = brick;
             this.currentLevel = currentLevel;
 
-            usedBrickList = new List<BrickController>();
+            usedBricks = new List<BrickController>();
 
             SetupGridPositions();
 
@@ -58,8 +60,9 @@ namespace BrickBreaker.Bricks
             this.currentLevel = currentLevel;
             this.scaleValue = scaleValue;
             this.threshold = threshold;
-
-            usedBrickList = new List<BrickController>();
+            totalBricks = maxRows * maxColumns;
+            activeBricks = 0;
+            usedBricks = new List<BrickController>();
 
             SetupGridPositions();
 
@@ -101,13 +104,13 @@ namespace BrickBreaker.Bricks
         // reset grid - return brick function for each individual brick
         public void ResetBrickGrid()
         {
-            int length = usedBrickList.Count;
+            int length = usedBricks.Count;
             for (int i = 0; i < length; i++)
             {
-                BrickController brick = usedBrickList[i];
+                BrickController brick = usedBricks[i];
                 brick.ReturnBrick?.Invoke(brick);
             }
-            usedBrickList.Clear();
+            usedBricks.Clear();
         }
 
         // Level 1
@@ -122,15 +125,13 @@ namespace BrickBreaker.Bricks
                     BrickController brick = brickManager.GetBrick();
 
                     // set brickVal to row no.
-                    brick.BrickModel.BrickValue = currentBrickVal;
-                    brick.BrickView.SetBrickValue(brick.BrickModel.BrickValue);
+                    brick.UpdateBrickValue(currentBrickVal);
 
-                    // Get position from gridPosition 
-                    Vector2 brickPos = gridPosition[row, col];
-                    // changes local positions inside brick pool parent obj
-                    brick.BrickView.SetPosition(brickPos);
+                    // Get position from gridPosition and set it to the brick
+                    brick.SetPositionLocal(gridPosition[row, col]);
+                    // add brick to brickGrid and usedBrickList
                     brickGrid[row, col] = brick;
-                    usedBrickList.Add(brick);
+                    usedBricks.Add(brick);
                 }
                 currentBrickVal--;
             }
@@ -148,10 +149,9 @@ namespace BrickBreaker.Bricks
                 float yPos = startPos.y;
 
                 BrickController brick = brickManager.GetBrick();
-                brick.BrickModel.BrickValue = currentBrickVal;
-                brick.BrickView.SetBrickValue(brick.BrickModel.BrickValue);
-                brick.BrickView.SetWorldPosition(xPos, yPos);
-                usedBrickList.Add(brick);
+                brick.UpdateBrickValue(currentBrickVal);
+                brick.SetPositionWorld(new Vector2(xPos, yPos));
+                usedBricks.Add(brick);
             }
         }
 
@@ -161,14 +161,31 @@ namespace BrickBreaker.Bricks
 
         private void RandomArrangement()
         {
-            RandomizeInitialState();
-
+            RandomizedStart();
+            // first update currentState = nextState, and set brickView active based on currentState
             UpdateBrickState();
-
+            // update value of bricks according to neighbour's active
             UpdateBrickValue();
+            Debug.Log("active_bricks: " + activeBricks);
+            Debug.Log("totalbricks: " + totalBricks);
         }
 
-        private void RandomizeInitialState()
+        public void RandomizeAfterTurn()
+        {
+            RegenerateBricks();
+            UpdateBrickState();
+            UpdateBrickValue();
+            Debug.Log("active_bricks: " + activeBricks);
+            Debug.Log("totalbricks: " + totalBricks);
+        }
+
+        // game over condition
+        public bool GameOverCondition()
+        {
+            return activeBricks >= totalBricks;
+        }
+
+        private void RandomizedStart()
         {
             for (int row = 0; row < maxRows; row++)
             {
@@ -176,12 +193,10 @@ namespace BrickBreaker.Bricks
                 {
                     BrickController brick = brickManager.GetBrick();
 
-                    // Get position from gridPosition 
-                    Vector2 brickPos = gridPosition[row, col];
                     // Set position of brick
-                    brick.BrickView.SetPosition(brickPos);
+                    brick.SetPositionLocal(gridPosition[row, col]);
                     brickGrid[row, col] = brick; // Add brick to grid
-                    usedBrickList.Add(brick);   // Add brick to usedBricks
+                    usedBricks.Add(brick);   // Add brick to usedBricks
 
                     // set nextState value and then update all bricks
                     brick.BrickModel.NextState = CalculateBrickState(row, col);
@@ -189,8 +204,48 @@ namespace BrickBreaker.Bricks
             }
         }
 
+
+        // too rapid growth
+        private void RegenerateBricks()
+        {
+            for (int row = 0; row < maxRows; row++)
+            {
+                for (int col = 0; col < maxColumns; col++)
+                {
+                    BrickController curr_brick = brickGrid[row, col];
+
+                    if (curr_brick.BrickModel.CurrentState == BrickState.Active)
+                    {
+                        ActivateNeighbours(row, col);
+                    }
+                }
+            }
+        }
+
+        private void RegenerateBricks2()
+        {
+            for (int row = 0; row < maxRows; row++)
+            {
+                for (int col = 0; col < maxColumns; col++)
+                {
+                    BrickController curr_brick = brickGrid[row, col];
+
+                    if (curr_brick.BrickModel.CurrentState == BrickState.Active)
+                    {
+                        activeBricks++;
+                        curr_brick.BrickModel.NextState = BrickState.Active;
+                    }
+                    else if (curr_brick.BrickModel.BrickValue > 2)
+                    {
+                        curr_brick.BrickModel.NextState = BrickState.Active;
+                    }
+                }
+            }
+        }
+
+        // cant use this in game
         // Conway's game of life - 3 Rules
-        public void ImplementGOL()
+        private void ImplementGOL()
         {
             for (int row = 0; row < maxRows; row++)
             {
@@ -203,19 +258,6 @@ namespace BrickBreaker.Bricks
                     {
                         brick.BrickModel.NextState = BrickState.Active;
                     }
-
-                    //// Rule 2 & 3
-                    //if (brick.BrickModel.CurrentState == BrickState.Active)
-                    //{
-                    //    if (brick.BrickModel.BrickValue < 2 || brick.BrickModel.BrickValue > 3)
-                    //    {
-                    //        brick.BrickModel.NextState = BrickState.Inactive;
-                    //    }
-                    //    else
-                    //    {
-                    //        brick.BrickModel.NextState = BrickState.Active;
-                    //    }
-                    //}
 
                     // Rule 2
                     else if (brick.BrickModel.CurrentState == BrickState.Active)
@@ -237,14 +279,11 @@ namespace BrickBreaker.Bricks
                     }
                 }
             }
-
-            UpdateBrickState();
-
-            UpdateBrickValue();
         }
 
         private void UpdateBrickState()
         {
+            activeBricks = 0;
             for (int row = 0; row < maxRows; row++)
             {
                 for (int col = 0; col < maxColumns; col++)
@@ -262,16 +301,6 @@ namespace BrickBreaker.Bricks
             return perlinValue > threshold ? BrickState.Active : BrickState.Inactive;
         }
 
-        private int RandomValue()
-        {
-            int rand = UnityEngine.Random.Range(0, 100);
-            if (rand > 50)
-            {
-                return 2;
-            }
-            return 1;
-        }
-
         // check if valid row, col value
         private bool IsValidCell(int row, int col)
         {
@@ -286,16 +315,24 @@ namespace BrickBreaker.Bricks
             {
                 for (int col = 0; col < maxColumns; col++)
                 {
-                    // Cell - brick
-                    BrickController brick = brickGrid[row, col];
-
-                    // updating brickValue for each cell/brick
-                    // 2. can check active status of neighbours
-                    //Get count of neighbours
                     int count = NeighbourCount(row, col);
-                    brick.BrickModel.BrickValue = count;
-                    brick.BrickView.SetBrickValue(count);
+                    //if (count == 0) count++;
+                    brickGrid[row, col].UpdateBrickValue(count);
 
+                }
+            }
+        }
+
+        private void ActivateNeighbours(int row, int col)
+        {
+            int len = neighbourX.Length;
+            for (int i = 0; i < len; i++)
+            {
+                int n_row = row + neighbourX[i];
+                int n_col = col + neighbourY[i];
+                if (IsValidCell(n_row, n_col))
+                {
+                    brickGrid[n_row, n_col].BrickModel.NextState = BrickState.Active;
                 }
             }
         }
@@ -311,9 +348,6 @@ namespace BrickBreaker.Bricks
                 int neighbour_col = col + neighbourY[i];
                 if (IsValidCell(neighbour_row, neighbour_col))
                 {
-                    // BrickController neighbourBrick = brickGrid[neighbour_row, neighbour_col];
-                    // do something with neighbour brick
-
                     if (brickGrid[neighbour_row, neighbour_col].BrickModel.CurrentState == BrickState.Active)
                     {
                         count++;
@@ -323,17 +357,17 @@ namespace BrickBreaker.Bricks
             return count;
         }
 
+        // updates currentState to be nextState in brickModel and 
+        // according to currentState value of brick
         // activate or deactivate a brick at a specific row and column
         private void SetBrickActive(int row, int col)
         {
             if (IsValidCell(row, col))
             {
-                BrickController brick = brickGrid[row, col];
-                if (brick != null)
+                brickGrid[row, col].ActiveByCurrState();
+                if (brickGrid[row, col].BrickModel.CurrentState == BrickState.Active)
                 {
-                    brick.BrickModel.UpdateCurrentState();
-                    bool isActive = brick.BrickModel.CurrentState == BrickState.Active ? true : false;
-                    brick.BrickView.SetBrickActive(isActive);
+                    activeBricks++;
                 }
             }
         }
