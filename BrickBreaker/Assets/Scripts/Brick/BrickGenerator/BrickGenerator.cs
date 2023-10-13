@@ -28,17 +28,17 @@ namespace BrickBreaker.Bricks
             int columns = CalculateColumns(totalLength, brickSize.x, out float leftoverSpaceX);
 
             // get starting point for parent transform
-            BrickLayout brick = new BrickLayout(brickSize.x, brickSize.y, brickOffsetX, brickOffsetY);
-            brickManager.SetStartPosition(brick, leftoverSpaceX, leftoverSpaceY);
+            BrickLayout brickLayout = new BrickLayout(brickSize.x, brickSize.y, brickOffsetX, brickOffsetY);
+            brickManager.SetStartPosition(brickLayout, leftoverSpaceX, leftoverSpaceY);
 
             // setup grid
-            brickManager.InitializeBricks(brick, rows, columns, currentLevel);
+            brickManager.InitializeBricks(brickLayout, rows, columns, currentLevel);
 
             // store brick height value for later
             brickHeight = brickSize.y;
         }
 
-        public void PerformFunction()
+        public void ModifyGrid()
         {
             brickManager.MoveBrickParentPosition(brickHeight, brickOffsetY);
         }

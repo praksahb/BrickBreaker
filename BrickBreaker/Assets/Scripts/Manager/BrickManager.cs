@@ -56,7 +56,7 @@ namespace BrickBreaker.Bricks
         // perform function 2 - after all balls returned
         public void TurnEffect()
         {
-            brickGenerator?.PerformFunction();
+            brickGenerator?.ModifyGrid();
         }
 
         public void ResetBrickGrid()
@@ -117,10 +117,18 @@ namespace BrickBreaker.Bricks
             brickPoolParent.transform.Translate(0, -moveValue, 0);
 
             brickGrid.AddBrickRow(startPosition);
-        }        // test function for game of life simulation
-        public void TestGOF()
+        }
+
+        // test function for game of life simulation
+        public void RegenerateBricks()
         {
-            brickGrid.ImplementGOL();
+            brickGrid.RandomizeAfterTurn();
+
+            if (brickGrid.GameOverCondition())
+            {
+                GameManager.GameOver?.Invoke();
+                Debug.Log("chk");
+            }
         }
 
         // Helpers for defining the size of the grid(rows and column values) from the screen size

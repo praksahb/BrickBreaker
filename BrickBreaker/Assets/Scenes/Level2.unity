@@ -843,9 +843,8 @@ MonoBehaviour:
   desiredRows: 10
   desiredColumns: 30
   currentLevel: 2
-  scaleValue: 0.5
-  threshold: 0.5
-  timer: 0.5
+  scaleValue: 0.204
+  threshold: 0.716
 --- !u!1 &969848293
 GameObject:
   m_ObjectHideFlags: 0
@@ -895,7 +894,7 @@ MonoBehaviour:
   brickManager: {fileID: 1941245275}
   gameOverPanel: {fileID: 280156904}
   ballSpeed: 20
-  ballPoolSize: 100
+  ballPoolSize: 6
   AimLineLength: 50
   maxReflections: 2
   lineOffset: 0.01

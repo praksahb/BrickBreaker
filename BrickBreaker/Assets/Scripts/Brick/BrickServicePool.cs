@@ -29,14 +29,12 @@ namespace BrickBreaker.Bricks
         public BrickController GetBrick()
         {
             BrickController brick = brickPool.GetObject();
-            brick.BrickView.SetBrickActive(true);
-            brick.BrickView.SetBrickValue(brick.BrickModel.BrickValue);
+            brick.DefaultActivate();
             return brick;
         }
 
         public void ReturnBrick(BrickController brick)
         {
-            brick.BrickView.SetBrickActive(false);
             brickPool.ReturnObject(brick);
         }
     }

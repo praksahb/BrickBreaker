@@ -22,30 +22,13 @@ namespace BrickBreaker.Bricks
             brickManager = GetComponentInParent<BrickManager>();
         }
 
-        // test variables -
-        [SerializeField] private float timer;
-        private float timerVal;
-
-        private void Start()
-        {
-            timerVal = timer;
-        }
-
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.A))
             {
                 brickManager.ResetGrid(scaleValue, threshold);
             }
-
-            timer -= Time.deltaTime;
-            if (timer <= 0.0f)
-            {
-                brickManager.TestGOF();
-                timer = timerVal;
-            }
         }
-        // till here- testing randomization
 
         // Method 2. creating brick of fixed sizes from the desired rows and column values.
         // and feeding it to the brick initialization function to create the bricks of the specific sizes.
@@ -60,17 +43,17 @@ namespace BrickBreaker.Bricks
             //brickManager.SetGridSize(desiredRows, desiredColumns);
 
             // Get starting point for parent
-            BrickLayout brick = new BrickLayout(brickWidth, brickHeight);
-            brickManager.SetStartPosition(brick);
+            BrickLayout brickLayout = new BrickLayout(brickWidth, brickHeight);
+            brickManager.SetStartPosition(brickLayout);
 
             // setup grid
-            brickManager.InitializeBricks(brick, desiredRows, desiredColumns, currentLevel, scaleValue, threshold);
+            brickManager.InitializeBricks(brickLayout, desiredRows, desiredColumns, currentLevel, scaleValue, threshold);
         }
 
-        public void PerformFunction()
+        public void ModifyGrid()
         {
             // To be created, randomize bricks after all balls have returned..
-            brickManager.TestGOF();
+            brickManager.RegenerateBricks();
         }
     }
 }

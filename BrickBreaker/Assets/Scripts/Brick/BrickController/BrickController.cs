@@ -22,14 +22,44 @@ namespace BrickBreaker.Bricks
             GameManager = gameManager;
         }
 
+        public void UpdateBrickValue(int value)
+        {
+            BrickModel.BrickValue = value;
+            BrickView.SetBrickValue(BrickModel.BrickValue);
+        }
+
         public void ReduceBrickValue()
         {
             BrickModel.BrickValue--;
             if (BrickModel.BrickValue <= 0)
             {
                 ReturnBrick?.Invoke(this);
+                BrickView.SetBrickActive(false);
             }
             BrickView.SetBrickValue(BrickModel.BrickValue);
+        }
+
+        public void DefaultActivate()
+        {
+            BrickView.SetBrickActive(true);
+            BrickView.SetBrickValue(BrickModel.BrickValue);
+        }
+
+        public void ActiveByCurrState()
+        {
+            BrickModel.UpdateCurrentState();
+            bool isActive = BrickModel.CurrentState == BrickState.Active ? true : false;
+            BrickView.SetBrickActive(isActive);
+        }
+
+        public void SetPositionLocal(Vector2 pos)
+        {
+            BrickView.SetPosition(pos);
+        }
+
+        public void SetPositionWorld(Vector2 pos)
+        {
+            BrickView.SetWorldPosition(pos.x, pos.y);
         }
     }
 }
