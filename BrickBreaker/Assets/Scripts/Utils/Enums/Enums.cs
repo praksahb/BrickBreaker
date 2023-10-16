@@ -17,3 +17,14 @@ namespace BrickBreaker
         NewType = 2,
     }
 }
+
+namespace BrickBreaker.UI
+{
+    public enum MenuType
+    {
+        MainMenu,
+        PlayLevel,
+        SelectOptions,
+        Exit,
+    }
+}

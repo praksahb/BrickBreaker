@@ -27,26 +27,19 @@ namespace BrickBreaker.Services
             LineRenderer = GetComponent<LineRenderer>();
         }
 
-        //private void Update()
-        //{
-        //    if (IsAiming)
-        //    {
-        //        LineRenderer.enabled = true;
-        //        Aim();
-        //        DrawReflectedTrajectory();
-        //    }
-
-        //    if (Input.GetMouseButtonDown(0) && IsAiming)
-        //    {
-        //        LineRenderer.enabled = false;
-        //        IsAiming = false;
-        //        Vector2 launchPosition = transform.up;
-
-        //        FireBalls?.Invoke(launchPosition);
-        //    }
-        //}
-
         private void Update()
+        {
+            if (Input.GetKey(KeyCode.LeftControl))
+            {
+                Debug.Log("switch");
+                AimUsingMouse();
+            }
+            // else
+            AimUsingTouch();
+
+        }
+
+        private void AimUsingTouch()
         {
             if (IsAiming)
             {
@@ -56,7 +49,7 @@ namespace BrickBreaker.Services
 
                     Touch touch = Input.GetTouch(0);
 
-                    MouseAim(touch.position);
+                    TouchAim(touch.position);
                     DrawReflectedTrajectory();
 
                     if (touch.phase == TouchPhase.Ended)
@@ -69,9 +62,27 @@ namespace BrickBreaker.Services
             }
         }
 
-        private void MouseAim(Vector2 touchPos)
+        private void AimUsingMouse()
         {
-            Debug.Log("Pos: " + touchPos);
+            if (IsAiming)
+            {
+                LineRenderer.enabled = true;
+                MouseAim();
+                DrawReflectedTrajectory();
+            }
+
+            if (Input.GetMouseButtonDown(0) && IsAiming)
+            {
+                LineRenderer.enabled = false;
+                IsAiming = false;
+                Vector2 launchPosition = transform.up;
+
+                FireBalls?.Invoke(launchPosition);
+            }
+        }
+
+        private void TouchAim(Vector2 touchPos)
+        {
             touchPos = MainCamera.ScreenToWorldPoint(touchPos);
 
             Vector2 difference = touchPos - (Vector2)transform.position;
@@ -80,7 +91,7 @@ namespace BrickBreaker.Services
             transform.rotation = rotation;
         }
 
-        public void Aim()
+        public void MouseAim()
         {
             mousePosition = MainCamera.ScreenToWorldPoint(Input.mousePosition);
 

@@ -1,5 +1,6 @@
 ﻿using BrickBreaker.Ball;
 using BrickBreaker.Bricks;
+using BrickBreaker.Serv;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -12,8 +13,7 @@ namespace BrickBreaker.Services
         [SerializeField] private BallView ballPrefab;
         [SerializeField] private BrickManager brickManager;
         [SerializeField] private GameOverPanel gameOverPanel;
-        [SerializeField] private int ballSpeed;
-        [SerializeField] private int ballPoolSize;
+        [SerializeField] private GameDataSO gameData;
 
         public Camera MainCamera
         {
@@ -26,6 +26,9 @@ namespace BrickBreaker.Services
         public Action GameOver;
         public Action RestartGame;
 
+        private int ballSpeed;
+        private int ballPoolSize;
+
         private AimLineController firePoint;
         private BoundaryManager boundaryManager;
         private BallServicePool ballServicePool;
@@ -36,15 +39,12 @@ namespace BrickBreaker.Services
         private int scoreCount;
         private Vector2 newFirePosition;
 
-        public void LoadValues(int ballSpeed, int ballPoolSize)
-        {
-            this.ballSpeed = ballSpeed;
-            this.ballPoolSize = ballPoolSize;
-        }
+
 
         private void Awake()
         {
             InitializeReference();
+            LoadBallValues();
         }
 
         private void OnEnable()
@@ -73,6 +73,13 @@ namespace BrickBreaker.Services
                 boundaryManager.MainCamera = mainCamera;
                 firePoint.MainCamera = mainCamera;
             }
+        }
+        private void LoadBallValues()
+        {
+            ballSpeed = gameData.ballSpeed;
+            ballPoolSize = gameData.ballPoolSize;
+            Debug.Log("Ball Speed: " + ballSpeed);
+            Debug.Log("Ball pool: " + ballPoolSize);
         }
 
         // On level loaded first time, initializes the level - aim trigger, bricks, boundaries

@@ -1082,11 +1082,7 @@ MonoBehaviour:
   ballPrefab: {fileID: -2775649247503592894, guid: 98a1c9097b3bd9644acd89aeb8f15ce9, type: 3}
   brickManager: {fileID: 1424576237}
   gameOverPanel: {fileID: 1745551023}
-  ballSpeed: 20
-  ballPoolSize: 5
-  AimLineLength: 50
-  maxReflections: 2
-  lineOffset: 0.01
+  gameData: {fileID: 11400000, guid: b3f98972e9372d64a83a427a03e15e5f, type: 2}
 --- !u!114 &1476385375
 MonoBehaviour:
   m_ObjectHideFlags: 0
