@@ -39,6 +39,13 @@ namespace BrickBreaker.Services
         private int scoreCount;
         private Vector2 newFirePosition;
 
+        public void LoadValues(int ballSpeed, int ballPoolSize, int maxReflections)
+        {
+            this.ballSpeed = ballSpeed;
+            this.ballPoolSize = ballPoolSize;
+            this.maxReflections = maxReflections;
+        }
+
         private void Awake()
         {
             InitializeReference();
