@@ -14,9 +14,6 @@ namespace BrickBreaker.Services
         [SerializeField] private GameOverPanel gameOverPanel;
         [SerializeField] private int ballSpeed;
         [SerializeField] private int ballPoolSize;
-        [SerializeField] private float AimLineLength;
-        [SerializeField] private int maxReflections;
-        [SerializeField] private float lineOffset;
 
         public Camera MainCamera
         {
@@ -34,16 +31,15 @@ namespace BrickBreaker.Services
         private BallServicePool ballServicePool;
         private Coroutine LaunchBallCoroutine;
 
-        private bool isAiming;
+        //private bool isAiming;
         private int ballCount;
         private int scoreCount;
         private Vector2 newFirePosition;
 
-        public void LoadValues(int ballSpeed, int ballPoolSize, int maxReflections)
+        public void LoadValues(int ballSpeed, int ballPoolSize)
         {
             this.ballSpeed = ballSpeed;
             this.ballPoolSize = ballPoolSize;
-            this.maxReflections = maxReflections;
         }
 
         private void Awake()
@@ -68,25 +64,6 @@ namespace BrickBreaker.Services
             RestartGame -= ReinitializeLevel;
         }
 
-        private void Update()
-        {
-            if (isAiming)
-            {
-                firePoint.LineRenderer.enabled = true;
-                firePoint.Aim();
-                firePoint.DrawReflectedTrajectory();
-            }
-
-            if (Input.GetMouseButtonDown(0) && isAiming)
-            {
-                firePoint.LineRenderer.enabled = false;
-                isAiming = false;
-                Vector2 launchPosition = firePoint.transform.up;
-
-                LaunchCoroutine(new Vector2(launchPosition.x, launchPosition.y));
-            }
-        }
-
         private void InitializeReference()
         {
             boundaryManager = GetComponent<BoundaryManager>();
@@ -106,23 +83,23 @@ namespace BrickBreaker.Services
             boundaryManager.SetBoundaries();
             // fire point/ launch position of balls is set at middle bottom of screen
             SetFirePoint();
-            // pass on values for aim trajectory
-            firePoint.SetLineValues(AimLineLength, maxReflections, lineOffset);
+            // subscribe to fire action
+            firePoint.FireBalls += LaunchCoroutine;
             // pass game manager reference
             gameOverPanel.SetGameManager(this);
             brickManager.GameManager = this;
             brickManager.MainCamera = MainCamera;
             //load brick grids
             brickManager.LoadGrid();
-            isAiming = true;
+            firePoint.IsAiming = true;
             scoreCount = 0;
         }
 
         // called if bricks reach bottom of screen
         private void StopGame()
         {
-            Debug.Log("chk2");
-            isAiming = false;
+            firePoint.IsAiming = false;
+            firePoint.FireBalls -= LaunchCoroutine;
             // load game over screen panel
             gameOverPanel.SetScoreValue(scoreCount);
             gameOverPanel.gameObject.SetActive(true);
@@ -133,7 +110,7 @@ namespace BrickBreaker.Services
         private void ReinitializeLevel()
         {
             scoreCount = 0;
-            isAiming = true;
+            firePoint.IsAiming = true;
             gameOverPanel.gameObject.SetActive(false);
             brickManager.UnsubscribeRestartEvent();
             SetFirePoint();
@@ -185,7 +162,7 @@ namespace BrickBreaker.Services
             if (ballCount == ballPoolSize)
             {
                 firePoint.transform.position = newFirePosition;
-                isAiming = true;
+                firePoint.IsAiming = true;
                 scoreCount++;
                 brickManager.TurnEffect();
             }

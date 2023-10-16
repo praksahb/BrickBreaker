@@ -1862,3 +1862,6 @@ MonoBehaviour:
   collisionLayerMask:
     serializedVersion: 2
     m_Bits: 768
+  totalLength: 20
+  maxReflections: 2
+  lineOffset: 0.01

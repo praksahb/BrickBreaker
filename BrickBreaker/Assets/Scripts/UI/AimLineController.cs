@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,30 +7,77 @@ namespace BrickBreaker.Services
     public class AimLineController : MonoBehaviour
     {
         [SerializeField] private LayerMask collisionLayerMask;
-        public LineRenderer LineRenderer { get; set; }
+        [SerializeField] private float totalLength;
+        [SerializeField] private int maxReflections;
+        [SerializeField] private float lineOffset;
+
+        private LineRenderer LineRenderer { get; set; }
 
         private RaycastHit2D hit;
         private Vector2 mousePosition;
-
-
-        private float totalLength;
-        private int maxReflections;
-        private float lineOffset;
-
+        private Vector2 touchPos;
         private List<Vector3> trajectoryPoints = new List<Vector3>();
 
         public Camera MainCamera { get; set; }
+        public bool IsAiming { get; set; }
+        public Action<Vector2> FireBalls;
 
         private void Awake()
         {
             LineRenderer = GetComponent<LineRenderer>();
         }
 
-        public void SetLineValues(float aimLineLength, int maxReflections, float lineOffset)
+        //private void Update()
+        //{
+        //    if (IsAiming)
+        //    {
+        //        LineRenderer.enabled = true;
+        //        Aim();
+        //        DrawReflectedTrajectory();
+        //    }
+
+        //    if (Input.GetMouseButtonDown(0) && IsAiming)
+        //    {
+        //        LineRenderer.enabled = false;
+        //        IsAiming = false;
+        //        Vector2 launchPosition = transform.up;
+
+        //        FireBalls?.Invoke(launchPosition);
+        //    }
+        //}
+
+        private void Update()
         {
-            totalLength = aimLineLength;
-            this.maxReflections = maxReflections;
-            this.lineOffset = lineOffset;
+            if (IsAiming)
+            {
+                if (Input.touchCount > 0)
+                {
+                    LineRenderer.enabled = true;
+
+                    Touch touch = Input.GetTouch(0);
+
+                    MouseAim(touch.position);
+                    DrawReflectedTrajectory();
+
+                    if (touch.phase == TouchPhase.Ended)
+                    {
+                        LineRenderer.enabled = false;
+                        IsAiming = false;
+                        FireBalls?.Invoke((Vector2)transform.up);
+                    }
+                }
+            }
+        }
+
+        private void MouseAim(Vector2 touchPos)
+        {
+            Debug.Log("Pos: " + touchPos);
+            touchPos = MainCamera.ScreenToWorldPoint(touchPos);
+
+            Vector2 difference = touchPos - (Vector2)transform.position;
+            float angle = Mathf.Atan2(difference.y, difference.x) * Mathf.Rad2Deg;
+            Quaternion rotation = Quaternion.AngleAxis(angle - 90, Vector3.forward);
+            transform.rotation = rotation;
         }
 
         public void Aim()

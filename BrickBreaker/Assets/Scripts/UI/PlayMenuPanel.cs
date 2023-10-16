@@ -62,7 +62,7 @@ namespace BrickBreaker.UI
                 if (gameManager != null)
                 {
                     Debug.Log("got gm script");
-                    gameManager.LoadValues(30, 10, 3);
+                    gameManager.LoadValues(20, 10);
                 }
                 SceneManager.sceneLoaded -= OnSceneLoaded; // Remove the event handler
             }
