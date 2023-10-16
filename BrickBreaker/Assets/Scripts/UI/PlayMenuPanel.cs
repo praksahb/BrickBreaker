@@ -1,5 +1,3 @@
-using BallBreaker.UI;
-using BrickBreaker.Services;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -46,25 +44,11 @@ namespace BrickBreaker.UI
         {
             int levelIdx = SceneManager.GetActiveScene().buildIndex + level;
             AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(levelIdx, LoadSceneMode.Single);
-            SceneManager.sceneLoaded += OnSceneLoaded;
 
             // Wait until the asynchronous scene fully loads
             while (!asyncLoad.isDone)
             {
                 yield return null;
-            }
-        }
-        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-        {
-            if (scene.name != "MainMenu")
-            {
-                GameManager gameManager = FindObjectOfType<GameManager>();
-                if (gameManager != null)
-                {
-                    Debug.Log("got gm script");
-                    gameManager.LoadValues(30, 10, 3);
-                }
-                SceneManager.sceneLoaded -= OnSceneLoaded; // Remove the event handler
             }
         }
     }

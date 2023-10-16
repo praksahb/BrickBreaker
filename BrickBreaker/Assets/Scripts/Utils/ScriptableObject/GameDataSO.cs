@@ -1,21 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace BrickBreaker
+namespace BrickBreaker.Serv
 {
-    public class GameDataSO : MonoBehaviour
+    [CreateAssetMenu(fileName = "GameData", menuName = "ScriptableObjects/GameDataSO")]
+    public class GameDataSO : ScriptableObject
     {
-        // Start is called before the first frame update
-        void Start()
-        {
-        
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-        
-        }
+        public int ballPoolSize;
+        public int ballSpeed;
     }
 }

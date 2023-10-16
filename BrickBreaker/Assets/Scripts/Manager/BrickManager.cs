@@ -154,7 +154,6 @@ namespace BrickBreaker.Bricks
 
             //store start point for use later in level 1
             startPosition = startPoint;
-            Debug.Log("Start: " + startPosition);
 
             brickPoolParent.position = startPoint;
         }

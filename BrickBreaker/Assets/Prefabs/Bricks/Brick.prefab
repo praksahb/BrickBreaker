@@ -36,8 +36,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.0033, y: 0}
-  m_SizeDelta: {x: 3.1144, y: 1.8}
+  m_AnchoredPosition: {x: -0.0033, y: 0.0112}
+  m_SizeDelta: {x: 3.1144, y: 1.9552}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!23 &4399088174614608923
 MeshRenderer:
@@ -316,6 +316,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 267410a64dc752948ad32f446c34ed48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  brickRenderer: {fileID: 8756473027068008026}
-  brickValRenderer: {fileID: 4399088174614608923}
-  boxCollider: {fileID: 8756473027051589578}
