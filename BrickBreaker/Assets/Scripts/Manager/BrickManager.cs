@@ -16,6 +16,8 @@ namespace BrickBreaker.Bricks
 
         private Vector2 startPosition;
 
+        private PlayLevel currentLevel; // test variable currently
+
         private IBrickGenerator brickGenerator;
 
 
@@ -35,6 +37,7 @@ namespace BrickBreaker.Bricks
         public void InitializeBricks(BrickLayout brick, int maxRows, int maxColumns, PlayLevel currentLevel)
         {
             InitializePool(brick.brickWidth, brick.brickHeight, maxRows, maxColumns);
+            this.currentLevel = currentLevel; // definitely not required in level 1.
             brickGrid = new BrickGrid(this, maxRows, maxColumns, brick, currentLevel);
         }
 
@@ -43,7 +46,9 @@ namespace BrickBreaker.Bricks
         {
             // create object pool of bricks
             InitializePool(brick.brickWidth, brick.brickHeight, maxRows, maxColumns);
-            // create brickGrid, having 2d arrays for bricks, positions 
+            // create brickGrid, having 2d arrays for bricks, positions
+
+            this.currentLevel = currentLevel; // might not be  required.
             brickGrid = new BrickGrid(this, maxRows, maxColumns, brick, currentLevel, scaleValue, thresholdValue);
         }
 
@@ -56,7 +61,10 @@ namespace BrickBreaker.Bricks
         // perform function 2 - after all balls returned
         public void TurnEffect()
         {
-            brickGenerator?.ModifyGrid();
+            if (currentLevel == PlayLevel.Classic)
+            {
+                brickGenerator?.ModifyGrid();
+            }
         }
 
         public void ResetBrickGrid()
@@ -73,6 +81,7 @@ namespace BrickBreaker.Bricks
         {
             brickGrid.ResetBrickGrid();
             brickGrid.SetVal(v1, v2);
+            brickGrid.RandomSeedStart();
             brickGrid.InitializeGrid();
         }
 

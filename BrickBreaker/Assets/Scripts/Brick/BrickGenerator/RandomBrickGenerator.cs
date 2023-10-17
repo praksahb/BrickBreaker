@@ -8,18 +8,22 @@ namespace BrickBreaker.Bricks
         [SerializeField] private int desiredRows;
         [SerializeField] private int desiredColumns;
         [SerializeField] private PlayLevel currentLevel;
-        [Range(0.0f, 1.0f)]
+        [Range(0.0f, 50.0f)]
         [SerializeField] private float scaleValue;
         [Range(0.0f, 1.0f)]
         [SerializeField] private float threshold;
-
+        [SerializeField] private bool activateBrianBrain;
         private BrickManager brickManager;
         private float brickWidth;
         private float brickHeight;
 
+        [SerializeField] private float timer;
+        private float timerVal;
+
         private void Awake()
         {
             brickManager = GetComponentInParent<BrickManager>();
+            timerVal = timer;
         }
 
         private void Update()
@@ -27,6 +31,17 @@ namespace BrickBreaker.Bricks
             if (Input.GetKeyDown(KeyCode.A))
             {
                 brickManager.ResetGrid(scaleValue, threshold);
+            }
+
+            if (activateBrianBrain)
+            {
+                timer -= Time.deltaTime;
+                if (timer <= 0f)
+                {
+                    ModifyGrid();
+                    timer = timerVal;
+                }
+
             }
         }
 

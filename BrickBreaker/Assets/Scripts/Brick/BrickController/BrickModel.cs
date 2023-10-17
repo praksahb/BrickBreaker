@@ -48,7 +48,7 @@ namespace BrickBreaker.Bricks
         public void UpdateCurrentState()
         {
             CurrentState = NextState;
-            NextState = BrickState.None;
+            NextState = BrickState.Inactive;
         }
 
         public BrickModel(float brickWidth, float brickHeight)
