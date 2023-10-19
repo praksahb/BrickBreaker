@@ -377,8 +377,7 @@ namespace BrickBreaker.Bricks
         {
             if (IsValidCell(row, col))
             {
-                brickGrid[row, col].ActiveByCurrState();
-                if (brickGrid[row, col].BrickModel.CurrentState == BrickState.Active)
+                if (brickGrid[row, col].UpdateBrick())
                 {
                     activeBricks++;
                 }

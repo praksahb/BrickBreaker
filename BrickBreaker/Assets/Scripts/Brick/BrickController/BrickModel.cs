@@ -53,7 +53,7 @@ namespace BrickBreaker.Bricks
 
         public BrickModel(float brickWidth, float brickHeight)
         {
-            BrickValue = 0; // set it later when arranging in grid or when getBrick is called from pool
+            BrickValue = 1; // set it later when arranging in grid or when getBrick is called from pool
             BrickWidth = brickWidth;
             BrickHeight = brickHeight;
             CurrentState = BrickState.None;

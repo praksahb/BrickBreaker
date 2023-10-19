@@ -9,16 +9,8 @@ namespace BrickBreaker.Bricks
         private Vector2[,] gridPosition;
         private BrickController[,] brickGrid;
 
-        private int maxRows;
-        private int maxColumns;
-
-        public BaseBrickGrid(int maxRows, int maxColumns)
-        {
-            this.maxRows = maxRows;
-            this.maxColumns = maxColumns;
-            gridPosition = new Vector2[maxRows, maxColumns];
-            brickGrid = new BrickController[maxRows, maxColumns];
-        }
+        protected int maxRows;
+        protected int maxColumns;
 
         // 1. traverse position grid
         protected void InitializePositionGrid(BrickLayout brickLayout)
@@ -39,7 +31,13 @@ namespace BrickBreaker.Bricks
             gridPosition[row, col] = new Vector2(xPosition, yPosition);
         }
 
-        // 2.1 brickTraversals
+        // 2 brickGrid initialization
+        public virtual void InitializeBricks(BrickManager brickManager)
+        {
+
+        }
+
+        // 2.1 Brick Grid initialization using Grid Traversal
         protected void InitializeBrickGrid(BrickManager brickManager, Action<BrickController, int, int> initializationFunc)
         {
             for (int row = 0; row < maxRows; row++)
@@ -73,5 +71,45 @@ namespace BrickBreaker.Bricks
                 }
             }
         }
+
+        // 3 Reset Brick Grid
+        // public as it will be called from outside of the class
+
+        public virtual void ResetBrickGrid()
+        {
+            Debug.Log("called");
+            for (int row = 0; row < maxRows; row++)
+            {
+                for (int col = 0; col < maxColumns; col++)
+                {
+                    BrickController brick = brickGrid[row, col];
+                    brick.ReturnBrick?.Invoke(brick);
+                    brick.BrickView.SetBrickActive(false);
+                }
+            }
+        }
+
+
+        // base class constructor
+        public BaseBrickGrid(int maxRows, int maxColumns)
+        {
+            this.maxRows = maxRows;
+            this.maxColumns = maxColumns;
+            gridPosition = new Vector2[maxRows, maxColumns];
+            brickGrid = new BrickController[maxRows, maxColumns];
+        }
+
+        // cant make BaseBrickGrid abstract because of these two differences
+        // used in Level 1 only
+        public virtual void AddBrickRow(Vector2 startPosition) { }
+
+        // used in Level 2 only
+        public virtual bool GameOverCondition()
+        {
+            return false;
+        }
+
+        // tester function used in level 2
+        public virtual void SetVal(float v1, float v2) { }
     }
 }

@@ -45,11 +45,12 @@ namespace BrickBreaker.Bricks
             BrickView.SetBrickValue(BrickModel.BrickValue);
         }
 
-        public void ActiveByCurrState()
+        public bool UpdateBrick()
         {
             BrickModel.UpdateCurrentState();
             bool isActive = BrickModel.CurrentState == BrickState.Active ? true : false;
             BrickView.SetBrickActive(isActive);
+            return isActive;
         }
 
         public void SetPositionLocal(Vector2 pos)

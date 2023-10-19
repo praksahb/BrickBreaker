@@ -8,55 +8,50 @@ namespace BrickBreaker.Bricks
         private List<BrickController> usedBricks;
         private BrickLayout brickLayout;
         private BrickManager brickManager;
-        private int currentBrickVal;
-
-        private int maxRows;
-        private int maxColumns;
+        private int brickValIncrement;
 
         private void SetupBrick(BrickController brick, int row, int col)
         {
-            brick.UpdateBrickValue(currentBrickVal - row);
+            brick.UpdateBrickValue(base.maxRows - row);
             usedBricks.Add(brick);
         }
 
         // custom constructor for Level 1 bricks generation
         public L1BrickGrid(BrickManager brickManager, int maxRows, int maxColumns, BrickLayout brickLayout) : base(maxRows, maxColumns)
         {
-            this.maxRows = maxRows;
-            this.maxColumns = maxColumns;
             this.brickManager = brickManager;
             this.brickLayout = brickLayout;
             usedBricks = new List<BrickController>();
 
             InitializePositionGrid(brickLayout);
-            InitializeBricks();
+            InitializeBricks(brickManager);
         }
 
         // initializes the brick grid
-        public void InitializeBricks()
+        public override void InitializeBricks(BrickManager brickManager)
         {
-            currentBrickVal = maxRows;
+            brickValIncrement = base.maxRows;
             InitializeBrickGrid(brickManager, SetupBrick);
         }
 
         // add a row of bricks at the top - working with world space values
-        public void AddBrickRow(Vector2 startPos)
+        public override void AddBrickRow(Vector2 startPos)
         {
-            currentBrickVal++;
-            for (int i = 0; i < maxColumns; i++)
+            brickValIncrement++;
+            for (int i = 0; i < base.maxColumns; i++)
             {
                 float xPos = startPos.x + i * (brickLayout.brickWidth + brickLayout.brickOffsetX);
                 float yPos = startPos.y;
 
                 BrickController brick = brickManager.GetBrick();
-                brick.UpdateBrickValue(currentBrickVal);
+                brick.UpdateBrickValue(brickValIncrement);
                 brick.SetPositionWorld(new Vector2(xPos, yPos));
                 usedBricks.Add(brick);
             }
         }
 
         // reset grid - return brick function for each individual brick
-        public void ResetBrickGrid()
+        public override void ResetBrickGrid()
         {
             int length = usedBricks.Count;
             for (int i = 0; i < length; i++)

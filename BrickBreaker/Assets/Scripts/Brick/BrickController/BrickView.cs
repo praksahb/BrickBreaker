@@ -6,9 +6,9 @@ namespace BrickBreaker.Bricks
     public class BrickView : MonoBehaviour, IBrickBreak
     {
         // renderer refs
-        //[SerializeField] private SpriteRenderer brickRenderer;
-        //[SerializeField] private MeshRenderer brickValRenderer;
-        //[SerializeField] private BoxCollider2D boxCollider;
+        [SerializeField] private SpriteRenderer brickRenderer;
+        [SerializeField] private BoxCollider2D boxCollider;
+        private MeshRenderer brickValRenderer;
 
 
         public BrickController BrickController { get; set; }
@@ -19,14 +19,18 @@ namespace BrickBreaker.Bricks
         private void Awake()
         {
             brickValueCounter = GetComponentInChildren<BrickValueCounter>();
-            //brickRenderer = GetComponent<SpriteRenderer>();
-            //brickValRenderer = brickValueCounter.GetComponent<MeshRenderer>();
-            //boxCollider = GetComponent<BoxCollider2D>();
+            if (brickValueCounter != null)
+            {
+                brickValRenderer = brickValueCounter.GetComponent<MeshRenderer>();
+            }
         }
 
         public void SetBrickValue(int value)
         {
-            brickValueCounter.SetValue(value);
+            if (brickValueCounter != null)
+            {
+                brickValueCounter.SetValue(value);
+            }
         }
 
         public void SetBrickSize(float brickWidth, float brickHeight)
@@ -36,11 +40,14 @@ namespace BrickBreaker.Bricks
 
         public void SetBrickActive(bool val)
         {
-            //brickRenderer.enabled = val;
-            //brickValRenderer.enabled = val;
-            //boxCollider.enabled = val;
+            brickRenderer.enabled = val;
+            if (brickValueCounter != null)
+            {
+                brickValRenderer.enabled = val;
+            }
+            boxCollider.enabled = val;
 
-            gameObject.SetActive(val);
+            //gameObject.SetActive(val);
         }
 
         public void Break()

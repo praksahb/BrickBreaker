@@ -11,15 +11,11 @@ namespace BrickBreaker.Bricks
         public GameManager GameManager { get; set; }
         public Camera MainCamera { private get; set; }
 
-        private BrickServicePool brickPool;
-        private L1BrickGrid brickGrid;
-
         private Vector2 startPosition;
 
-        private PlayLevel currentLevel; // test variable currently
-
+        private BrickServicePool brickPool;
         private IBrickGenerator brickGenerator;
-
+        private BaseBrickGrid brickGrid;
 
         private void Awake()
         {
@@ -33,24 +29,29 @@ namespace BrickBreaker.Bricks
             int totalBricks = maxRows * maxColumns;
             brickPool = new BrickServicePool(totalBricks, brick, brickPoolParent, GameManager);
         }
+        // function is called when action is invoked from brickController
+        private void ReturnBrick(BrickController brick)
+        {
+            brick.ReturnBrick -= ReturnBrick;
+            brickPool.ReturnBrick(brick);
+        }
+
         // creates brickGrid level 1
-        public void InitializeBricks(BrickLayout brick, int maxRows, int maxColumns, PlayLevel currentLevel)
+        public void InitializeBricks(BrickLayout brick, int maxRows, int maxColumns)
         {
             InitializePool(brick.brickWidth, brick.brickHeight, maxRows, maxColumns);
-            this.currentLevel = currentLevel; // definitely not required in level 1.
             brickGrid = new L1BrickGrid(this, maxRows, maxColumns, brick);
         }
 
-        //// create brickGrid for level 2
-        //public void InitializeBricks(BrickLayout brick, int maxRows, int maxColumns, PlayLevel currentLevel, float scaleValue, float thresholdValue)
-        //{
-        //    // create object pool of bricks
-        //    InitializePool(brick.brickWidth, brick.brickHeight, maxRows, maxColumns);
-        //    // create brickGrid, having 2d arrays for bricks, positions
+        // create brickGrid for level 2
+        public void InitializeBricks(BrickLayout brick, int maxRows, int maxColumns, float scaleValue, float thresholdValue)
+        {
+            // create object pool of bricks
+            InitializePool(brick.brickWidth, brick.brickHeight, maxRows, maxColumns);
+            // create brickGrid, having 2d arrays for bricks, positions
 
-        //    this.currentLevel = currentLevel; // might not be  required.
-        //    brickGrid = new BrickGrid(this, maxRows, maxColumns, brick, currentLevel, scaleValue, thresholdValue);
-        //}
+            brickGrid = new L2BrickGrid(this, maxRows, maxColumns, brick, scaleValue, thresholdValue);
+        }
 
         // perform function 1 
         public void LoadGrid()
@@ -61,10 +62,7 @@ namespace BrickBreaker.Bricks
         // perform function 2 - after all balls returned
         public void TurnEffect()
         {
-            if (currentLevel == PlayLevel.Classic)
-            {
-                brickGenerator?.ModifyGrid();
-            }
+            brickGenerator?.ModifyGrid();
         }
 
         public void ResetBrickGrid()
@@ -73,17 +71,16 @@ namespace BrickBreaker.Bricks
 
             brickGrid.ResetBrickGrid();
 
-            brickGrid.InitializeBricks();
+            brickGrid.InitializeBricks(this);
         }
 
-        // test function for perlin noise generation
-        //public void ResetGrid(float v1, float v2)
-        //{
-        //    brickGrid.ResetBrickGrid();
-        //    brickGrid.SetVal(v1, v2);
-        //    brickGrid.RandomSeedStart();
-        //    brickGrid.InitializeGrid();
-        //}
+        // stest function for checking random brick shapes
+        public void ResetGrid(float v1, float v2)
+        {
+            Debug.Log("click");
+            brickGrid.SetVal(v1, v2);
+            ResetBrickGrid();
+        }
 
         // gets a brick from the pool
         public BrickController GetBrick()
@@ -99,13 +96,6 @@ namespace BrickBreaker.Bricks
             return new Vector2(brickPrefab.transform.localScale.x, brickPrefab.transform.localScale.y);
         }
 
-        // function is called when action is invoked from brickController
-        private void ReturnBrick(BrickController brick)
-        {
-            brick.ReturnBrick -= ReturnBrick;
-            brickPool.ReturnBrick(brick);
-        }
-
         // action is invoked from gameOverPanel when restart button is clicked
         public void SubscribeRestartLevel()
         {
@@ -118,6 +108,8 @@ namespace BrickBreaker.Bricks
             GameManager.RestartGame -= ResetBrickGrid;
         }
 
+        //Next Turn Functions - BrickGrid
+        // Level - 1
         // move parent brick obj -1.25 (brickHeight + offsetY) in y-axis
         public void MoveBrickParentPosition(float brickHeight, float offsetY)
         {
@@ -126,6 +118,16 @@ namespace BrickBreaker.Bricks
             brickPoolParent.transform.Translate(0, -moveValue, 0);
 
             brickGrid.AddBrickRow(startPosition);
+        }
+        // Level - 2
+        public void CheckWinCondition()
+        {
+            if (brickGrid.GameOverCondition())
+            {
+                GameManager.GameOver?.Invoke();
+
+                Debug.Log("game over");
+            }
         }
 
         // test function for game of life simulation
@@ -140,8 +142,8 @@ namespace BrickBreaker.Bricks
         //    }
         //}
 
-        // Helpers for defining the size of the grid(rows and column values) from the screen size
 
+        // Helpers for defining the size of the grid(rows and column values) from the screen size
         // Calculate the length and height of top half of screen space
         public void FindGridArea(out float boxWidth, out float boxHeight)
         {

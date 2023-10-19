@@ -7,7 +7,6 @@ namespace BrickBreaker.Bricks
     {
         [SerializeField] private int desiredRows;
         [SerializeField] private int desiredColumns;
-        [SerializeField] private PlayLevel currentLevel;
         [Range(0.0f, 50.0f)]
         [SerializeField] private float scaleValue;
         [Range(0.0f, 1.0f)]
@@ -30,7 +29,7 @@ namespace BrickBreaker.Bricks
         {
             if (Input.GetKeyDown(KeyCode.A))
             {
-                //brickManager.ResetGrid(scaleValue, threshold);
+                brickManager.ResetGrid(scaleValue, threshold);
             }
 
             if (activateBrianBrain)
@@ -62,13 +61,15 @@ namespace BrickBreaker.Bricks
             brickManager.SetStartPosition(brickLayout);
 
             // setup grid
-            //brickManager.InitializeBricks(brickLayout, desiredRows, desiredColumns, currentLevel, scaleValue, threshold);
+            brickManager.InitializeBricks(brickLayout, desiredRows, desiredColumns, scaleValue, threshold);
         }
 
         public void ModifyGrid()
         {
             // To be created, randomize bricks after all balls have returned..
             //brickManager.RegenerateBricks();
+
+            brickManager.CheckWinCondition();
         }
     }
 }
