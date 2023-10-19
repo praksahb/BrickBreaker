@@ -126,26 +126,24 @@ namespace BrickBreaker.Bricks
 
         private void NormalArrangement()
         {
-            currentBrickVal = maxRows;
             for (int row = 0; row < maxRows; row++)
             {
                 for (int col = 0; col < maxColumns; col++)
                 {
                     BrickController brick = brickManager.GetBrick();
-
-                    // set brickVal to row no.
-                    brick.UpdateBrickValue(currentBrickVal);
-
                     // Get position from gridPosition and set it to the brick
                     brick.SetPositionLocal(gridPosition[row, col]);
+
+                    // set brickVal to row no.
+                    brick.UpdateBrickValue(maxRows - row);
                     // add brick to brickGrid and usedBrickList
                     brickGrid[row, col] = brick;
                     usedBricks.Add(brick);
                 }
-                currentBrickVal--;
             }
             currentBrickVal = maxRows;
         }
+
 
         // add a row of bricks at the top - working with world space values
         public void AddBrickRow(Vector2 startPos)
@@ -167,7 +165,6 @@ namespace BrickBreaker.Bricks
         // Level 2
 
         // generate random initial states of brick in grid
-
         private void RandomArrangement()
         {
             RandomizedStart();
@@ -177,21 +174,6 @@ namespace BrickBreaker.Bricks
             UpdateBrickValue();
             Debug.Log("active_bricks: " + activeBricks);
             Debug.Log("totalbricks: " + totalBricks);
-        }
-
-        public void RandomizeAfterTurn()
-        {
-            RegenerateBricks2();
-            UpdateBrickState();
-            UpdateBrickValue();
-            Debug.Log("active_bricks: " + activeBricks);
-            Debug.Log("totalbricks: " + totalBricks);
-        }
-
-        // game over condition
-        public bool GameOverCondition()
-        {
-            return activeBricks >= totalBricks;
         }
 
         private void RandomizedStart()
@@ -212,6 +194,22 @@ namespace BrickBreaker.Bricks
                 }
             }
         }
+
+        public void RandomizeAfterTurn()
+        {
+            RegenerateBricks2();
+            UpdateBrickState();
+            UpdateBrickValue();
+            Debug.Log("active_bricks: " + activeBricks);
+            Debug.Log("totalbricks: " + totalBricks);
+        }
+
+        // game over condition
+        public bool GameOverCondition()
+        {
+            return activeBricks >= totalBricks;
+        }
+
 
         // seed's rules
         private void RegenerateBricks2()

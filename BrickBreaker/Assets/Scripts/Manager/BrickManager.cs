@@ -12,7 +12,7 @@ namespace BrickBreaker.Bricks
         public Camera MainCamera { private get; set; }
 
         private BrickServicePool brickPool;
-        private BrickGrid brickGrid;
+        private L1BrickGrid brickGrid;
 
         private Vector2 startPosition;
 
@@ -38,19 +38,19 @@ namespace BrickBreaker.Bricks
         {
             InitializePool(brick.brickWidth, brick.brickHeight, maxRows, maxColumns);
             this.currentLevel = currentLevel; // definitely not required in level 1.
-            brickGrid = new BrickGrid(this, maxRows, maxColumns, brick, currentLevel);
+            brickGrid = new L1BrickGrid(this, maxRows, maxColumns, brick);
         }
 
-        // create brickGrid for level 2
-        public void InitializeBricks(BrickLayout brick, int maxRows, int maxColumns, PlayLevel currentLevel, float scaleValue, float thresholdValue)
-        {
-            // create object pool of bricks
-            InitializePool(brick.brickWidth, brick.brickHeight, maxRows, maxColumns);
-            // create brickGrid, having 2d arrays for bricks, positions
+        //// create brickGrid for level 2
+        //public void InitializeBricks(BrickLayout brick, int maxRows, int maxColumns, PlayLevel currentLevel, float scaleValue, float thresholdValue)
+        //{
+        //    // create object pool of bricks
+        //    InitializePool(brick.brickWidth, brick.brickHeight, maxRows, maxColumns);
+        //    // create brickGrid, having 2d arrays for bricks, positions
 
-            this.currentLevel = currentLevel; // might not be  required.
-            brickGrid = new BrickGrid(this, maxRows, maxColumns, brick, currentLevel, scaleValue, thresholdValue);
-        }
+        //    this.currentLevel = currentLevel; // might not be  required.
+        //    brickGrid = new BrickGrid(this, maxRows, maxColumns, brick, currentLevel, scaleValue, thresholdValue);
+        //}
 
         // perform function 1 
         public void LoadGrid()
@@ -73,17 +73,17 @@ namespace BrickBreaker.Bricks
 
             brickGrid.ResetBrickGrid();
 
-            brickGrid.InitializeGrid();
+            brickGrid.InitializeBricks();
         }
 
         // test function for perlin noise generation
-        public void ResetGrid(float v1, float v2)
-        {
-            brickGrid.ResetBrickGrid();
-            brickGrid.SetVal(v1, v2);
-            brickGrid.RandomSeedStart();
-            brickGrid.InitializeGrid();
-        }
+        //public void ResetGrid(float v1, float v2)
+        //{
+        //    brickGrid.ResetBrickGrid();
+        //    brickGrid.SetVal(v1, v2);
+        //    brickGrid.RandomSeedStart();
+        //    brickGrid.InitializeGrid();
+        //}
 
         // gets a brick from the pool
         public BrickController GetBrick()
@@ -129,16 +129,16 @@ namespace BrickBreaker.Bricks
         }
 
         // test function for game of life simulation
-        public void RegenerateBricks()
-        {
-            brickGrid.RandomizeAfterTurn();
+        //public void RegenerateBricks()
+        //{
+        //    brickGrid.RandomizeAfterTurn();
 
-            if (brickGrid.GameOverCondition())
-            {
-                GameManager.GameOver?.Invoke();
-                Debug.Log("chk");
-            }
-        }
+        //    if (brickGrid.GameOverCondition())
+        //    {
+        //        GameManager.GameOver?.Invoke();
+        //        Debug.Log("chk");
+        //    }
+        //}
 
         // Helpers for defining the size of the grid(rows and column values) from the screen size
 

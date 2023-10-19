@@ -30,7 +30,7 @@ namespace BrickBreaker.Bricks
         {
             if (Input.GetKeyDown(KeyCode.A))
             {
-                brickManager.ResetGrid(scaleValue, threshold);
+                //brickManager.ResetGrid(scaleValue, threshold);
             }
 
             if (activateBrianBrain)
@@ -62,13 +62,13 @@ namespace BrickBreaker.Bricks
             brickManager.SetStartPosition(brickLayout);
 
             // setup grid
-            brickManager.InitializeBricks(brickLayout, desiredRows, desiredColumns, currentLevel, scaleValue, threshold);
+            //brickManager.InitializeBricks(brickLayout, desiredRows, desiredColumns, currentLevel, scaleValue, threshold);
         }
 
         public void ModifyGrid()
         {
             // To be created, randomize bricks after all balls have returned..
-            brickManager.RegenerateBricks();
+            //brickManager.RegenerateBricks();
         }
     }
 }
