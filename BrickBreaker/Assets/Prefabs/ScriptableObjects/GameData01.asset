@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a935747b4ec019e4ab1148afcdeb6ade, type: 3}
   m_Name: GameData01
   m_EditorClassIdentifier: 
-  ballPoolSize: 5
-  ballSpeed: 2
+  ballPoolSize: 1
+  ballSpeed: 20

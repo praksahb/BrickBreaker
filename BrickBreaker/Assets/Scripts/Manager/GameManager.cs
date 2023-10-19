@@ -118,6 +118,7 @@ namespace BrickBreaker.Services
         {
             scoreCount = 0;
             firePoint.IsAiming = true;
+            firePoint.FireBalls += LaunchCoroutine;
             gameOverPanel.gameObject.SetActive(false);
             brickManager.UnsubscribeRestartEvent();
             SetFirePoint();

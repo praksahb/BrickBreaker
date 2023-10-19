@@ -840,11 +840,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8766ab0a265941a4a8171800f4155aff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  desiredRows: 10
-  desiredColumns: 30
-  currentLevel: 2
-  scaleValue: 0.204
-  threshold: 0.716
+  desiredRows: 50
+  desiredColumns: 100
+  scaleValue: 3.5
+  threshold: 0.516
+  activateBrianBrain: 0
+  timer: 0.1
 --- !u!1 &969848293
 GameObject:
   m_ObjectHideFlags: 0
@@ -1641,7 +1642,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e07886ea82d12b44d951676f802e6a24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  brickPrefab: {fileID: 2656544010723799990, guid: 3d2945ebe09f3214189da6b82f6f5857, type: 3}
+  brickPrefab: {fileID: 718726315753135608, guid: ee369f1009986a547acfaa744e85643c, type: 3}
   brickPoolParent: {fileID: 889789827}
 --- !u!4 &1941245276
 Transform:
