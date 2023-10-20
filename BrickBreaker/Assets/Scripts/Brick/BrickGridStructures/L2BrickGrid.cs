@@ -9,7 +9,6 @@ namespace BrickBreaker
         private float threshold;
         private float offsetX;
         private float offsetY;
-        private int activeBricks;
 
         private int brickValue; // keeping default of 1 from brickModel's constructor
 
@@ -44,7 +43,7 @@ namespace BrickBreaker
             {
                 if (brick.UpdateBrick()) // sets the brick active or inactive 
                 {
-                    activeBricks++;
+                    base.activeBricks++;
                 }
             }
         }
@@ -78,7 +77,6 @@ namespace BrickBreaker
             RandomSeedStart();
             // intialize brickGrid
             InitializeBrickGrid(brickManager, SetupBricks);
-            activeBricks = 0;
             // update state values for bricks
             BrickGridTraversal(SetBrickActive);
         }

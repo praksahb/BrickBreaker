@@ -842,7 +842,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   desiredRows: 50
   desiredColumns: 100
-  scaleValue: 3.5
+  scaleValue: 2.5
   threshold: 0.516
   activateBrianBrain: 0
   timer: 0.1

@@ -28,14 +28,18 @@ namespace BrickBreaker.Bricks
 
         public BrickController GetBrick()
         {
-            BrickController brick = brickPool.GetObject();
-            brick.DefaultActivate();
-            return brick;
+            return brickPool.GetObject();
         }
 
         public void ReturnBrick(BrickController brick)
         {
             brickPool.ReturnObject(brick);
+        }
+
+        // helper function to get size of brick
+        public Vector2 GetBrickSize()
+        {
+            return new Vector2(baseBrick.brickWidth, baseBrick.brickHeight);
         }
     }
 }

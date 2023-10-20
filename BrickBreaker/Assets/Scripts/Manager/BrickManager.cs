@@ -33,7 +33,9 @@ namespace BrickBreaker.Bricks
         private void ReturnBrick(BrickController brick)
         {
             brick.ReturnBrick -= ReturnBrick;
+            brick.BrickView.SetBrickActive(false);
             brickPool.ReturnBrick(brick);
+            brickGrid.DecrementActiveBricks();
         }
 
         // creates brickGrid level 1
@@ -68,16 +70,13 @@ namespace BrickBreaker.Bricks
         public void ResetBrickGrid()
         {
             brickPoolParent.position = startPosition;
-
             brickGrid.ResetBrickGrid();
-
             brickGrid.InitializeBricks(this);
         }
 
         // stest function for checking random brick shapes
         public void ResetGrid(float v1, float v2)
         {
-            Debug.Log("click");
             brickGrid.SetVal(v1, v2);
             ResetBrickGrid();
         }
@@ -86,14 +85,20 @@ namespace BrickBreaker.Bricks
         public BrickController GetBrick()
         {
             BrickController brick = brickPool.GetBrick();
+            brick.BrickView.SetBrickActive(true);
             brick.ReturnBrick += ReturnBrick;
             return brick;
         }
 
         // get brick w * h from prefab
-        public Vector2 GetBrickSize()
+        public Vector2 GetBrickPrefabSize()
         {
             return new Vector2(brickPrefab.transform.localScale.x, brickPrefab.transform.localScale.y);
+        }
+
+        public Vector2 GetCurrentBrickSize()
+        {
+            return brickPool.GetBrickSize();
         }
 
         // action is invoked from gameOverPanel when restart button is clicked

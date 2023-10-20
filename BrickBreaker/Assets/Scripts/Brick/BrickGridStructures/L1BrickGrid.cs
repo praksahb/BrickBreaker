@@ -58,7 +58,6 @@ namespace BrickBreaker.Bricks
             {
                 BrickController brick = usedBricks[i];
                 brick.ReturnBrick?.Invoke(brick);
-                brick.BrickView.SetBrickActive(false);
 
                 //usedBricks[i].ReturnBrick?.Invoke(usedBricks[i]);
 

@@ -14,7 +14,11 @@ namespace BrickBreaker.Ball
         private void Awake()
         {
             Rigidbody2D = GetComponent<Rigidbody2D>();
+        }
 
+        public void SetBallRadius(float radius)
+        {
+            transform.localScale = new Vector3(radius, radius, 1f);
         }
 
         public void SetBallActive(bool val)
