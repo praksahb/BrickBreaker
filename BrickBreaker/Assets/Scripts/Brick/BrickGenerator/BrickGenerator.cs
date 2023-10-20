@@ -21,7 +21,7 @@ namespace BrickBreaker.Bricks
             brickManager.FindGridArea(out float totalLength, out float totalHeight);
 
             // get brick size (w * h)
-            Vector2 brickSize = brickManager.GetBrickSize();
+            Vector2 brickSize = brickManager.GetBrickPrefabSize();
 
             int rows = CalculateRows(totalHeight, brickSize.y, out float leftoverSpaceY);
             int columns = CalculateColumns(totalLength, brickSize.x, out float leftoverSpaceX);

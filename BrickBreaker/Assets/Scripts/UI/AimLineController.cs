@@ -31,7 +31,6 @@ namespace BrickBreaker.Services
         {
             if (Input.GetKey(KeyCode.LeftControl))
             {
-                Debug.Log("switch");
                 AimUsingMouse();
             }
             // else

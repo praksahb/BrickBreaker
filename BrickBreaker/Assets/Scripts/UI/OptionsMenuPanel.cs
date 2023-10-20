@@ -19,16 +19,23 @@ namespace BrickBreaker.UI
 
         private void OnEnable()
         {
-            SaveValues();
+            DefaultValues();
             saveBtn.onClick.AddListener(SaveValues);
             backBtn.onClick.AddListener(ReturnMainMenu);
         }
 
+        private void DefaultValues()
+        {
+            gameData.ballPoolSize = (int)ballNumberSlider.value;
+            gameData.ballSpeed = (int)ballSpeedSlider.value;
+        }
 
         private void SaveValues()
         {
             gameData.ballPoolSize = (int)ballNumberSlider.value;
             gameData.ballSpeed = (int)ballSpeedSlider.value;
+            UIManager.SelectMenu?.Invoke(UI.MenuType.MainMenu);
+
         }
 
         private void ReturnMainMenu()

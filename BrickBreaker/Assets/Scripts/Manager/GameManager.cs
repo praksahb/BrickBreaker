@@ -78,27 +78,36 @@ namespace BrickBreaker.Services
         {
             ballSpeed = gameData.ballSpeed;
             ballPoolSize = gameData.ballPoolSize;
-            Debug.Log("Ball Speed: " + ballSpeed);
-            Debug.Log("Ball pool: " + ballPoolSize);
         }
 
         // On level loaded first time, initializes the level - aim trigger, bricks, boundaries
         private void InitializeLevel()
         {
-            gameOverPanel.gameObject.SetActive(false);
-            ballServicePool = new BallServicePool(ballPoolSize, ballSpeed, ballPrefab, firePoint.transform);
+            // setup boundary walls
             boundaryManager.SetBoundaries();
+
+            // setup bricks
+            brickManager.GameManager = this;
+            brickManager.MainCamera = MainCamera;
+            brickManager.LoadGrid();
+            // Get size of brick and pass its lower value as radius value for balls
+            Vector2 brickSize = brickManager.GetCurrentBrickSize();
+
+            float ballRadius = Mathf.Min(brickSize.x, brickSize.y) / 2;
+            ballRadius = Mathf.Min(0.2f, ballRadius);
+            // setup balls
+            BallData ballData = new BallData(ballPrefab, ballSpeed, ballRadius);
+            ballServicePool = new BallServicePool(ballPoolSize, ballData, firePoint.transform);
             // fire point/ launch position of balls is set at middle bottom of screen
             SetFirePoint();
             // subscribe to fire action
             firePoint.FireBalls += LaunchCoroutine;
+            firePoint.IsAiming = true;
+
             // pass game manager reference
             gameOverPanel.SetGameManager(this);
-            brickManager.GameManager = this;
-            brickManager.MainCamera = MainCamera;
-            //load brick grids
-            brickManager.LoadGrid();
-            firePoint.IsAiming = true;
+            gameOverPanel.gameObject.SetActive(false);
+
             scoreCount = 0;
         }
 
@@ -128,7 +137,7 @@ namespace BrickBreaker.Services
         {
             Vector3 point = mainCamera.ScreenToWorldPoint(new Vector3(Screen.width / 2, 0, 0));
             // manually modifying launch point;
-            point.y += 0.15f; point.z = 0;
+            point.y += 0.2f; point.z = 0;
             firePoint.transform.position = point;
         }
 

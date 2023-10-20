@@ -17,8 +17,8 @@ namespace BrickBreaker.Bricks
             BrickModel = brickModel;
             BrickView = UnityEngine.Object.Instantiate(brickPrefab, parentObj, false);
             BrickView.BrickController = this;
+            BrickView.SetBrickValue(BrickModel.BrickValue);
             BrickView.SetBrickSize(BrickModel.BrickWidth, BrickModel.BrickHeight);
-            BrickView.SetBrickActive(false);
             GameManager = gameManager;
         }
 
@@ -34,14 +34,7 @@ namespace BrickBreaker.Bricks
             if (BrickModel.BrickValue <= 0)
             {
                 ReturnBrick?.Invoke(this);
-                BrickView.SetBrickActive(false);
             }
-            BrickView.SetBrickValue(BrickModel.BrickValue);
-        }
-
-        public void DefaultActivate()
-        {
-            BrickView.SetBrickActive(true);
             BrickView.SetBrickValue(BrickModel.BrickValue);
         }
 

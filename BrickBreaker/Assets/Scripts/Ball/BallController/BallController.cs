@@ -10,11 +10,12 @@ namespace BrickBreaker.Ball
 
         public Action<BallController> ReturnBall;
 
-        public BallController(BallModel ballModel, BallView ballView, Transform firePoint)
+        public BallController(BallModel ballModel, BallView ballView, Transform firePoint, float ballRadius)
         {
             BallModel = ballModel;
             BallView = UnityEngine.Object.Instantiate(ballView, firePoint, true);
             BallView.BallController = this;
+            BallView.SetBallRadius(ballRadius);
             BallView.SetBallActive(false);
         }
     }

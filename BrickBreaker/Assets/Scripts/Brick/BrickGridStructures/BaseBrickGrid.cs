@@ -11,6 +11,7 @@ namespace BrickBreaker.Bricks
 
         protected int maxRows;
         protected int maxColumns;
+        protected int activeBricks;
 
         // 1. traverse position grid
         protected void InitializePositionGrid(BrickLayout brickLayout)
@@ -29,12 +30,6 @@ namespace BrickBreaker.Bricks
             float xPosition = col * (brickLayout.brickWidth + brickLayout.brickOffsetX);
             float yPosition = -row * (brickLayout.brickHeight + brickLayout.brickOffsetY);
             gridPosition[row, col] = new Vector2(xPosition, yPosition);
-        }
-
-        // 2 brickGrid initialization
-        public virtual void InitializeBricks(BrickManager brickManager)
-        {
-
         }
 
         // 2.1 Brick Grid initialization using Grid Traversal
@@ -62,6 +57,9 @@ namespace BrickBreaker.Bricks
         // 2.2 Grid Traversal (brickGrid)
         protected void BrickGridTraversal(Action<BrickController, int, int> BrickOperation)
         {
+            // reset active bricks
+            activeBricks = 0;
+
             for (int row = 0; row < maxRows; row++)
             {
                 for (int col = 0; col < maxColumns; col++)
@@ -77,14 +75,12 @@ namespace BrickBreaker.Bricks
 
         public virtual void ResetBrickGrid()
         {
-            Debug.Log("called");
             for (int row = 0; row < maxRows; row++)
             {
                 for (int col = 0; col < maxColumns; col++)
                 {
                     BrickController brick = brickGrid[row, col];
                     brick.ReturnBrick?.Invoke(brick);
-                    brick.BrickView.SetBrickActive(false);
                 }
             }
         }
@@ -99,6 +95,12 @@ namespace BrickBreaker.Bricks
             brickGrid = new BrickController[maxRows, maxColumns];
         }
 
+        // 2 brickGrid initialization
+        public virtual void InitializeBricks(BrickManager brickManager)
+        {
+            // functionality to be  added in derived class
+        }
+
         // cant make BaseBrickGrid abstract because of these two differences
         // used in Level 1 only
         public virtual void AddBrickRow(Vector2 startPosition) { }
@@ -111,5 +113,10 @@ namespace BrickBreaker.Bricks
 
         // tester function used in level 2
         public virtual void SetVal(float v1, float v2) { }
+
+        public void DecrementActiveBricks()
+        {
+            activeBricks--;
+        }
     }
 }

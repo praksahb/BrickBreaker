@@ -4,15 +4,14 @@ namespace BrickBreaker.Ball
 {
     public class BallServicePool
     {
-        private int speed;
         private GenericPooling<BallController> ballPool;
-        private Transform firePoint;
-        private BallView ballPrefab;
 
-        public BallServicePool(int amount, int speed, BallView ballPrefab, Transform firePoint)
+        private Transform firePoint;
+        private BallData ballData;
+
+        public BallServicePool(int amount, BallData ballData, Transform firePoint)
         {
-            this.ballPrefab = ballPrefab;
-            this.speed = speed;
+            this.ballData = ballData;
             this.firePoint = firePoint;
             ballPool = new GenericPooling<BallController>(amount, CreateBall);
         }
@@ -21,8 +20,8 @@ namespace BrickBreaker.Ball
 
         public BallController CreateBall()
         {
-            BallModel ballModel = new BallModel(speed);
-            return new BallController(ballModel, ballPrefab, firePoint);
+            BallModel ballModel = new BallModel(ballData.ballSpeed);
+            return new BallController(ballModel, ballData.ballPrefab, firePoint, ballData.ballRadius);
         }
 
         public BallController GetBall()
@@ -38,4 +37,19 @@ namespace BrickBreaker.Ball
             ballPool.ReturnObject(ball);
         }
     }
+
+    public class BallData
+    {
+        public BallView ballPrefab;
+        public int ballSpeed;
+        public float ballRadius;
+
+        public BallData(BallView ballPrefab, int ballSpeed, float ballRadius)
+        {
+            this.ballPrefab = ballPrefab;
+            this.ballSpeed = ballSpeed;
+            this.ballRadius = ballRadius;
+        }
+    }
+
 }
